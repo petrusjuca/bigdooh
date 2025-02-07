@@ -123,7 +123,9 @@ nav a:hover::after {
         position: absolute; /* Posiciona a lista de navegação */
         top: 8vh; /* Alinha abaixo do nav */
         right: 0; /* Alinha à direita */
-        width: 50vw; /* Largura da lista */
+        width: 100%; /* Largura da lista */
+        overflow: hidden; /* Evita overflow */
+
         height: 92vh; /* Altura da lista */
         background: #23232e; /* Cor de fundo da lista */
         flex-direction: column; /* Alinha itens em coluna */
