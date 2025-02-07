@@ -108,10 +108,16 @@ nav a:hover::after {
 }
 
 /* Estilos responsivos */
-@media (max-width: 999px) {
+@media (max-width: 999px) {     
     body {
         overflow-x: hidden; /* Evita rolagem horizontal */
     }
+
+    .mobile-menu {
+        display: none; /* Esconde o menu móvel por padrão */
+        cursor: pointer; /* Indica que é clicável */
+        margin-top: 10px;
+    }                                   
 
     .nav-list {
         position: absolute; /* Posiciona a lista de navegação */
