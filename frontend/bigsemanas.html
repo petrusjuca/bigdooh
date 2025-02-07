@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Semanas</title>
+    <link rel="stylesheet" href="css/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" /> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #111116;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .container {
+            margin: 20px auto; /* Centraliza o container */
+            padding: 20px; /* Adiciona espaçamento interno */
+            background-color: #111116; /* Cor de fundo para o container */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+        }
+        table {
+            border-radius: 15px;
+            width: 70%;
+            height: fit-content;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Necessário para esconder bordas arredondadas */
+           
+        }
+        th, td {
+            border: 1px solid #000000;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff6f20;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .visualizar {
+            text-decoration: none;
+            color: #ff6f20;
+        }
+        .visualizar:hover {
+            text-decoration: underline;
+        }
+        
+      @media screen and (max-width: 600px) {
+    table {
+        background-color: #111116; 
+        width: 100%; /* Garante que ocupa toda a largura */
+        border-radius: 10px; /* Arredondar cantos */
+        overflow: hidden; /* Esconde bordas */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        margin-bottom: 5px; /* Espaçamento inferior */
+            
+    }
+    thead {
+        display: none; /* Esconde os cabeçalhos */
+    }
+    tr {
+        display: flex; /* Usar flexbox para um layout mais limpo */
+        flex-direction: column; /* Coloca os itens na coluna */
+        margin-bottom: 15px; /* Espaçamento entre cartões */
+        background: #fff; /* Cor de fundo para cada linha */
+        border-radius: 10px; /* Arredondar cantos */
+        padding: 15px; /* Espaçamento interno */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+    }
+    td {
+        display: flex; /* Usar flexbox */
+        justify-content: space-between; /* Espaçamento entre rótulo e valor */
+        padding: 10px 0; /* Espaçamento vertical */
+        border-bottom: 1px solid #020202; /* Linha entre células */
+    }
+    td:last-child {
+        border-bottom: 1px solid; /* Remove a linha inferior do último item */
+    }
+    td[data-label="Latitude"],
+    td[data-label="Sentido"],
+    td[data-label="Longitude"] {
+        display: none; /* Esconde Latitude e Longitude */
+    }
+    td::before {
+        content: attr(data-label); /* Rótulo para cada célula */
+        font-weight: bold; /* Negrito para destaque */
+        color: #ff6f20; /* Cor do rótulo */
+        margin-right: 10px; /* Espaçamento entre rótulo e valor */
+    }
+}
+@media screen and (max-width: 600px) {
+    .localizacoes-title {
+        font-size: 40px; /* Ajuste o tamanho conforme necessário */
+        text-align: center; /* Centraliza o título */
+        margin: 10px 0; /* Espaçamento em cima e embaixo */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+    <script>
+        AOS.init(); // Inicializa AOS
+    </script>
+ <header id="navbar">
+    <nav>
+        <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">BIG</a></li>
+            <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
+            <li><a href="#contact-section">FALA BIG!</a></li>
+            <li><a href="#midia-ooh">MÍDIA DOOH</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="#quem-somos">QUEM SOMOS</a></li>
+            <li><a href="bigsemanas.html">BIG SEMANAS</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <div class="video-container">
+        <a href="index.html" class="logo-button">
+            <h1 class="logo">BIGDOOH</h1>
+        </a>
+        <h1 class="localizacoes-title">BIG SEMANAS</h1>
+        <video class="background-video" autoplay muted loop>
+            <source src="imgs/videomain.mp4" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+        </video>
+    </div>
+    <a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+    </a>
+    <table class="big-semanas-table">
+        <thead>
+            <tr>
+                <th>Big Semana</th>
+                <th>Início</th>
+                <th>Término</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Dados serão inseridos dinamicamente via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+    fetch('/api/bigsemanas')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('table-body');
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td data-label="BIG Semana">${item.BIGSEMANA}</td>
+                    <td data-label="Início">${item.INÍCIO}</td>
+                    <td data-label="Término">${item.TÉRMINO}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar dados:', error));
+});
+    </script>
+</body>
+</html>

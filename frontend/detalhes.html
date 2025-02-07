@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Outdoor</title>
+  <link rel="stylesheet" href="css/style.css"> <!-- Link para o arquivo CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> <!-- Fonte Montserrat -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" /> <!-- AOS -->
+  <!-- CSS do Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #111116;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow:  0 4px 20px rgba(0, 0, 0, 0.1);
+      height: 70%;
+      width: 40%;
+      position: center;
+      transition: transform 0.3s;
+    }
+    .header {
+      display: flex;
+      align-items: flex-start;
+    }
+    .foto {
+      width: 100%;
+      margin-right: 20px;
+      display: none;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-grow: 1;
+    }
+    h1 {
+      font-size: 2em;
+      color: #ff6f20;
+      margin: 0 0 10px;
+    }
+    .info div {
+      margin: 5px 0;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .button-containerdetalhes {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .buttondetalhes {
+      padding: 6px 10px;
+      background-color: #ff6f20;
+      color: white;
+      position: inherit;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+      width: auto;
+    }
+    .buttondetalhes:hover {
+      background-color: #e65c00;
+    }
+    #latlongDiv {
+      display: none;
+      margin-top: 10px;
+      font-size: 1em;
+      color: #333;
+    }
+    .map-container {
+      
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      min-height: 200px;
+    }
+    /* Substituímos o iframe por um div para o Leaflet */
+    #map {
+      width: 100%;
+      height: 400px;
+      border: 0;
+    }
+    .overlay {
+      position: relative;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    .overlay img {
+      width: 100%;
+      height: auto;
+    }
+    @media (max-width: 768px) {
+      .container {
+        width: 90%;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="navbar">
+    <nav>
+      <div class="mobile-menu">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+      <ul class="nav-list">
+        <li><a href="index.html">BIG</a></li>
+        <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
+        <li><a href="#contact-section">FALA BIG!</a></li>
+        <li><a href="#midia-ooh">MÍDIA DOOH</a></li>
+        <li><a href="blog.html">BLOG</a></li>
+        <li><a href="#quem-somos">QUEM SOMOS</a></li>
+        <li><a href="bigsemanas.html">BIG SEMANAS</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="header">
+      <img id="foto" class="foto" src="imgs/wesleeysafadao.png" alt="Foto do Outdoor"/> <!-- Foto à esquerda -->
+      <div class="info">
+        <h1 id="placa">Placa: </h1>
+        <div id="tipo">Tipo: </div>
+        <div id="endereco">Endereço: </div>
+        <div class="button-containerdetalhes">
+          <button class="buttondetalhes" id="show-photo-btn">Visualizar Foto</button>
+          <button class="buttondetalhes" id="latlong-btn">Mostrar Latitude e Longitude</button>
+          <button class="buttondetalhes" onclick="window.history.back();">←</button>
+        </div>
+        <div id="latlongDiv">
+          <div>Latitude: <span id="latitude"></span></div>
+          <div>Longitude: <span id="longitude"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="map-container">
+      <!-- Aqui usamos um div com id "map" para o Leaflet -->
+      <div id="map"></div>
+      <div class="overlay" id="overlay">
+        <img id="overlayFoto" src="" alt="Foto do Outdoor">
+      </div>
+    </div>
+  </div>
+
+  <!-- Script do Leaflet -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      fetch(`/api/outdoors/${id}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Outdoor não encontrado');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Atualiza as informações na página
+          document.getElementById('placa').innerText += data.NUM_PLACA;
+          document.getElementById('tipo').innerText += data.TIPO;
+          document.getElementById('endereco').innerText += data.ENDERECO;
+
+          const fotoElement = document.getElementById('foto');
+          fotoElement.src = data.FOTO_URL;
+
+          console.log('Image source:', fotoElement.src); // Debugging line
+
+          const lat = data.LATITUDE;
+          const lng = data.LONGITUDE;
+
+          // Inicializa o mapa interativo com Leaflet centralizado nas coordenadas obtidas
+          var map = L.map('map').setView([lat, lng], 14);
+
+          // Adiciona a camada de tiles do OpenStreetMap
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+
+          // Adiciona um marcador com popup na localização
+          L.marker([lat, lng]).addTo(map)
+            .bindPopup(`<strong>Localização do Outdoor</strong><br>${data.ENDERECO}`)
+            .openPopup();
+
+          // Lida com o botão para visualizar/ocultar a foto em sobreposição
+          document.getElementById('show-photo-btn').addEventListener('click', function() {
+            const overlay = document.getElementById('overlay');
+            const overlayFoto = document.getElementById('overlayFoto');
+
+            if (overlay.style.display === 'none' || overlay.style.display === '') {
+              overlayFoto.src = fotoElement.src; // Define a foto na sobreposição
+              overlayFoto.onerror = function() {
+                console.error('Erro ao carregar a imagem:', fotoElement.src);
+                overlay.style.display = 'none'; // Esconde a sobreposição se a imagem não carregar
+                document.getElementById('map').style.display = 'block'; // Mostra o mapa novamente
+                this.innerText = 'Visualizar Foto';
+              };
+
+              overlay.style.display = 'flex'; // Mostra a sobreposição
+              document.getElementById('map').style.display = 'none'; // Opcional: esconde o mapa
+              this.innerText = 'Ocultar Foto';
+            } else {
+              overlay.style.display = 'none'; // Esconde a sobreposição
+              document.getElementById('map').style.display = 'block'; // Mostra o mapa
+              this.innerText = 'Visualizar Foto';
+            }
+          });
+
+          // Lida com o botão para mostrar/ocultar a latitude e longitude
+          document.getElementById('latlong-btn').addEventListener('click', function() {
+            const latlongDiv = document.getElementById('latlongDiv');
+            latlongDiv.style.display = latlongDiv.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('latitude').innerText = lat;
+            document.getElementById('longitude').innerText = lng;
+          });
+        })
+        .catch(error => console.error('Erro:', error));
+    });
+  </script>
+  <a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+  </a>
+</body>
+</html>

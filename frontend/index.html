@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME - BIGDOOH </title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Link para o arquivo CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> <!-- Link para a fonte Montserrat -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" /> <!-- Link para AOS -->
+    <style>
+        .section-title {
+            font-size: 2.5em; /* Tamanho da fonte */
+            color: var(--cor-primaria); /* Cor principal */
+            text-align: center;
+            margin: 40px 0; /* Espaço acima e abaixo */
+            position: relative;
+        }
+       
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px; /* Largura da linha */
+            height: 4px; /* Altura da linha */
+            background: var(--cor-primaria); /* Cor da linha */
+            margin: 10px auto; /* Centraliza a linha */
+        }
+ 
+        .highlight {
+            font-weight: bold; /* Destaque em negrito */
+            color: var(--cor-secundaria); /* Cor secundária para destaque */
+        }
+
+        .statistics {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px; /* Espaço acima das estatísticas */
+        }
+
+        .stat {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .stat h3 {
+            font-size: 3em; /* Tamanho do número */
+            color: var(--cor-primaria); /* Cor do número */
+        }
+
+        .stat p {
+            font-size: 1.2em; /* Tamanho da descrição */
+            color: #ffffff; /* Cor da descrição */
+        }
+
+        /* Estilos para a imagem de fundo com efeito parallax */
+        .parallax {
+            background-image: url(imgs/parallaxprincipal.png); /* Substitua pelo caminho da sua imagem */
+            height: 500px; /* Altura da seção com parallax */
+            box-shadow: inset 6px 6px 13px 0px rgba(43, 42, 42, 0.7);
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+        @media (max-width: 768px) {
+            .parallax {
+                background-attachment: scroll; /* No mobile, o fundo rola com o conteúdo */
+            }
+            .section-title {
+                font-size: 2em; /* Ajuste do tamanho da fonte */
+            }
+            .stat h3 {
+                font-size: 2em; /* Ajuste do tamanho do número */
+            }
+            .stat p {
+                font-size: 1em; /* Ajuste do tamanho da descrição */
+            }
+            .solucao-card {
+                width: 100%; /* Ajuste para ocupar 100% da largura */
+                margin: 10px 0; /* Margem vertical */
+            }
+            .button-containermain {
+                display: flex;
+                align-items: center; /* Centraliza os botões */
+                margin-top: 20px; /* Espaço acima dos botões */
+            }
+            .learn-more {
+                margin: 10px 0; /* Espaço entre os botões */
+                width: auto; /* Ajusta a largura do botão */
+                padding: 10px 20px; /* Ajusta o padding do botão */
+            }
+        }
+
+        /* Estilos para a imagem de fundo com efeito parallax */
+        .parallax1 {
+            background-image: url('imgs/parallaxoutdoor.png'); /* Substitua pelo caminho da sua imagem */
+            height: 300px; /* Altura da seção com parallax */
+            box-shadow: inset 6px 6px 13px 0px rgba(43, 42, 42, 0.7);
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+
+        .parallax-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Estilo para a seção de soluções */
+        #solucoes {
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .solucoes-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .solucao-card {
+            width: 30%;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .solucao-imagem {
+            width: 100%;
+            height: auto;
+        }
+
+        html,body {
+            width: 100%;
+            height: 100%;
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #111116; 
+        }
+    </style>
+</head>
+<body>
+
+    <header id="navbar">
+        <nav>
+            <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+            <ul class="nav-list">
+                <li><a href="index.html">BIG</a></li>
+                <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
+                <li><a href="#contact-section">FALA BIG!</a></li>
+                <li><a href="#midia-ooh">MÍDIA DOOH</a></li>
+                <li><a href="blog.html">BLOG</a></li>
+                <li><a href="#quem-somos">QUEM SOMOS</a></li>
+                <li><a href="bigsemanas.html">BIG SEMANAS</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="video-container">
+        <a href="index.html" class="logo-button">
+            <h1 class="logo">BIGDOOH</h1>
+        </a>
+        <video class="background-video" autoplay muted loop>
+            <source src="imgs/videomain.mp4" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+        </video>
+        <div class="button-containermain">
+            <a href="https://wa.me/8534918533" target="_blank">
+                <button class="learn-more" data-aos="fade-up" data-aos-delay="3000">  
+                    <span class="circle" aria-hidden="true">
+                        <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">Contato</span>
+                </button>
+            </a>
+            <a href="localizacoes.html" target="_blank">
+                <button class="learn-more" data-aos="fade-up" data-aos-delay="3000">  
+                    <span class="circle" aria-hidden="true">
+                        <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">Locais</span>
+                </button>
+            </a>
+        </div>
+        <div class="centered-text"> 
+            <h2 id="typing-effect"></h2>
+        </div>
+    </div>
+
+    <section id="numeros">
+        <h2 class="section-title" data-aos="fade-up" >NOSSOS NÚMEROS</h2>
+        <div class="statistics">
+            <div class="stat" data-aos="fade-up" >
+                <h3 class="counter" data-target="1000000">0</h3>
+                <p>Pessoas atingidas por mês</p>
+                <div class="linha"></div> <!-- Linha abaixo da frase -->
+            </div>
+            <div class="stat" data-aos="fade-up" >
+                <h3 class="counter" data-target="462000">0</h3>
+                <p>Pessoas impactadas entre Av. Santos Dumont e Dom Luis.</p>
+                <div class="linha"></div> <!-- Linha abaixo da frase -->
+            </div>
+            <div class="stat" data-aos="fade-up" >
+                <h3 class="counter" data-target="1000">0</h3>
+                <p>Impressões Digitais de alta qualidade</p>
+                <div class="linha"></div> <!-- Linha abaixo da frase -->
+            </div>
+            <div class="stat" data-aos="fade-up">
+                <div class="number-container">
+                    <h3 class="counter main" data-target="17">0</h3>
+                    <h3 class="counter secondary" data-target="18">0</h3>
+                    <div class="line-separator"></div> <!-- Linha entre os números -->
+                </div>
+                <p>Quantidade de LEDs</p>
+                <div class="linha"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Parallax -->
+    <div class="parallax"></div>
+
+    <section id="solucoes" class="solucoes">
+        <div class="mensagem-container">
+            <h3 class="mensagem-pequena" data-aos="fade-up" data-aos-delay="100">O que você procura</h3>
+            <p class="mensagem-grande" data-aos="fade-up" data-aos-delay="200">A Bigdooh oferece as melhores soluções em mídia exterior</p>
+            <div class="linha" data-aos= "fade-up" delay="300 "></div> <!-- Linha abaixo da frase -->
+        </div>
+        <div class="solucoes-list">
+            <div class="solucao-card" data-id="3" >
+                <img src="imgs/outdoor led.jpg" alt="Solução 3" class="solucao-imagem">
+                <h3>Painel de LED</h3>
+                <p>Propaganda em movimento, impactante e cheia de possibilidades para impressionar seu público-alvo.</p>
+            </div>
+            <div class="solucao-card" data-id="2"  >
+                <img src="imgs/painellightvip.jpg" alt="Solução 2" class="solucao-imagem">
+                <h3>Front Light VIP</h3>
+                <p>A melhor escolha para exclusividade, impacto e visualização com iluminação premium.</p>
+            </div>
+            <div class="solucao-card" data-id="1" >
+                <img src="imgs/outdordepapel.jpg" alt="Solução 1" class="solucao-imagem">
+                <h3>Outdoor Padrão</h3>
+                <p>Um outdoor com baixo custo, ideal para quem busca impactar clientes sem grandes orçamentos.</p>
+            </div>
+
+            <div class="solucao-card" data-id="4"  >
+                <img src="imgs/IMPRESSAO.jpg" alt="Solução 4" class="solucao-imagem1">
+                <h3>Impressão</h3>
+                <p>Nossa impressão é feita In-House, com materiais de qualidade, garantindo ótimo acabamento em papel couchê, adesivo ou lona.</p>
+            </div>
+        </div>
+    </section>
+    <section class="projetos-especiais">
+        <p class="frase-pergunta" data-aos="fade-up" data-aos-delay="100">O que você procura?</p>
+        <h2 data-aos="fade-up" data-aos-delay="200">Projetos Especiais</h2>
+        <p class="frase-solucoes" data-aos="fade-up" data-aos-delay="200">A BigDOOH preza pela excelência na execução de serviços, dando atenção aos mínimos detalhes para que a sua marca cause o impacto desejado.</p>
+        <div class="linha" data-aos="fade-up" data-aos-delay="300"></div> <!-- Linha abaixo da frase -->
+        <div class="projetos-list">
+
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <div class="top">
+                    <img src="imgs/ar condiconado.png" alt="Ar Condicionado NAGEM" class="card-image">
+                    <p class="title">Ar Condicionado NAGEM</p>
+                </div>
+                <p class="desc">Mais que um outdoor, uma experiência imersiva! Simulamos um ar-condicionado de verdade, trazendo um realismo nunca visto antes.</p>
+            </div>
+
+        
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <div class="top">
+                    <img src="imgs/wesleysaafadao.png" alt="Outdoor Duplo Iluminado - Wesley Safadão" class="card-image">
+                    <p class="title">Outdoor Duplo Iluminado - Wesley Safadão</p>
+                </div>
+                <p class="desc">
+                    Transforme sua marca em destaque na cidade! Com nossa parceria, dois outdoors se tornam uma poderosa tela única, entregando impacto e resultados reais.</p>
+            </div>
+
+            
+            <div class="card" data-aos="fade-up" data-aos-delay="100">  
+                <div class="top">
+                    <img src="" alt="Claro - Black friday" class="card-image">
+                    <p class="title">Claro -Black Friday</p>
+                </div>
+                <p class="desc">Aplique de um balde simulando esparramar o Slime, com altura de 2M.</p>
+            </div>
+
+            <div class="button-containerprojetosespeciais" data-aos="fade-up">
+                <a href="#projetos" class="btn-confira">Confira Nossos Projetos</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="parallax1"></div>
+
+    <section id="quem-somos">
+        <div class="about-content" data-aos="fade-up" >
+            <div class="content-wrapper">
+                <div class="text-content" data-aos="fade-up"  >
+                    <h2 class="section-title" data-aos="fade-up" >QUEM SOMOS</h2>
+                    <p>Referência em mídia OOH no Nordeste, reinventamos a conexão entre marcas e públicos há 24 anos. Nossa empresa pioneira oferece soluções personalizadas, integrando tecnologia de ponta, dados e IA para campanhas direcionadas que maximizam o ROI. Com displays de alta resolução em locais estratégicos, garantimos uma comunicação impactante e envolvente. Transforme sua marca conosco!</p>
+                    
+                    <h3>Nossos Números</h3>
+                    <ul>
+                        <li><strong>+12 milhões</strong> de pessoas impactadas por ano</li>
+                        <li><strong>+10 mil</strong> telas digitais instaladas</li>
+                        <li>Presença em mais de <strong>150 terminais de passageiros</strong> e <strong>120 locais estratégicos</strong></li>
+                    </ul>
+    
+                    <h3>Missão e Visão</h3>
+                    <p>Nossa missão é transformar ideias em experiências visuais impactantes, impulsionando o crescimento dos negócios e fortalecendo as marcas. Acreditamos na força da criatividade, na qualidade dos nossos serviços e no poder da comunicação para transformar o mundo.</p>
+                    
+                    <!-- Botão dentro do contêiner de texto -->
+                    <div class="button-containerquemsomos">
+                        <a href="link-para-sua-pagina.html" class="button-saiba-mais">Saiba Mais</a>
+                    </div>
+                </div>
+                <div class="image-content" data-aos="fade-up">
+                    <img src="imgs/quem somos.png" alt="Sobre a NEOOH" class="about-image">
+                </div>
+            </div>
+        </div>
+    </section>
+ <section class="contact-section" data-aos="fade-up">
+    <div class="contact-container">
+        <div class="info-container">
+            <h2 class="section-title" data-aos="fade-up">Fale Conosco</h2>
+
+            <p>Crie anúncios impactantes e personalizados que geram resultados reais para o seu negócio. Fale com quem entende, solicite seu orçamento agora mesmo!</p>
+
+            <div class="contact-info">  
+                <div class="info-item">
+                    <h3>WhatsApp</h3>
+                    <p class="contact-link whatsapp">
+                        <img src="imgs/zap zap.png" alt="WhatsApp Logo" class="whatsapp-logo">
+                        <a href="https://wa.me/8534918533" target="_blank">85-34918533</a>
+                    </p>
+                </div>
+                <div class="info-item">
+                    <h3>Email</h3>
+                    <p class="contact-link email"> 
+                        <img src="imgs/emailogo2.png" alt="email logo" class="whatsapp-logo">
+                        <a href="mailto:contato@bigdooh.com.br">contato@bigdooh.com.br</a>
+                    </p>
+                </div>
+                <div class="info-item">
+                    <h3>Localização</h3>
+                    <p>
+                        <img src="imgs/pontolocal.png" alt="Localização logo" class="location-logo">
+                        R. Eduardo Angelim, 1240 - Montese, Fortaleza - CE.
+                    </p>
+                </div> 
+            </div>  
+
+            <form action="enviar_contato.php" method="POST">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="mensagem">Mensagem:</label>
+                    <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="button-enviar">Enviar</button>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="imgs/bigfone.png" alt="Foto da Empresa" class="empresa-foto">
+        </div>
+    </div>
+</section>
+<a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
+</a>
+
+    <footer>
+        <p>&copy; 2024 BigDooh. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+    <script src="js/script.js"></script> 
+</body>
+</html>

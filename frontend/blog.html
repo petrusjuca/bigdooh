@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOG - BIGDOOH</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Link para o arquivo CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> <!-- Link para a fonte Montserrat -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" /> <!-- Link para AOS -->
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #111116;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #FF5733; /* Cor do título */
+        }
+        .container {
+            margin: 20px auto; /* Centraliza o container */
+            padding: 20px; /* Adiciona espaçamento interno */
+            background-color: #111116; /* Cor de fundo para o container */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+        }
+        .grid {
+            display: flex; /* Usando flexbox */
+            justify-content: center; /* Centraliza os itens */
+            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+            gap: 20px; /* Espaçamento entre os cards */
+            padding: 20px;
+        }
+        .custom-card {
+            background-color: #111116; 
+            border-radius: 8px; /* Bordas arredondadas */
+            overflow: hidden; /* Para garantir que nada vazará */
+            transition: transform 0.3s; /* Adiciona uma transição suave */
+            width: 500px; /* Largura fixa do card */
+            padding: 15px; /* Espaçamento interno */
+            text-align: left; /* Alinha o texto à esquerda */
+        }
+
+        .custom-card:hover {
+            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+        }
+
+        .custom-card img {
+            width: 100%; /* Imagem ocupa 100% do card */
+            height: 300px; /* Altura automática para manter proporção */
+            border-radius: 20px; /* Bordas arredondadas para a imagem */
+        }
+
+        .custom-card h3 {
+            margin: 10px 0; /* Margem para o título */
+            font-size: 1.5em; /* Tamanho do título */
+            color: #FF5733; /* Cor laranja do título */
+        }
+
+        .custom-card p {
+            padding: 0 0 10px; /* Espaçamento interno para o parágrafo */
+            color: #FF5733; /* Cor do texto do parágrafo */
+        }
+
+        .buttonespecificoda1
+        {
+            display: inline-block;
+            margin-top: 58px; /* Margem para o botão */
+            padding: 10px 15px;
+            background-color: #FF5733; /* Cor do botão */
+            color: white; /* Cor do texto do botão */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s; /* Transições para o botão */
+        }
+    
+        .buttonespecificoda1:hover {
+            background-color: #000000; /* Cor ao passar o mouse */
+        }
+        .button {
+            display: inline-block;
+            margin-top: 10px; /* Margem para o botão */
+            padding: 10px 15px;
+            background-color: #FF5733; /* Cor do botão */
+            color: white; /* Cor do texto do botão */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s; /* Transições para o botão */
+        }
+        .button:hover {
+            background-color: #000000; /* Cor ao passar o mouse */
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0; /* Espaçamento no rodapé */
+            background-color: #222; /* Cor de fundo do rodapé */
+            color: white; /* Cor do texto do rodapé */
+        }
+        @media (max-width: 768px) {
+            .grid {
+                flex-direction: column; /* Alinha os itens em uma coluna */
+                align-items: center; /* Centraliza os cartões horizontalmente */
+            }
+            .custom-card {
+                width: 90%; /* Largura adaptável (90% da tela) */
+                max-width: 500px; /* Largura máxima para cartões grandes */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header id="navbar">
+    <nav>
+        <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">BIG</a></li>
+            <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
+            <li><a href="#midia-ooh">MÍDIA DOOH</a></li>
+            <li><a href="#blog">BLOG</a></li>
+            <li><a href="#quem-somos">QUEM SOMOS</a></li>
+            <li><a href="#BIG-SEMANAS">BIG SEMANAS</a></li>
+        </ul>
+    </nav>
+</header>
+<header id="navbar">
+    <nav>
+        <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-list">
+            <li><a href="index.html">BIG</a></li>
+            <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
+            <li><a href="#contact-section">FALA BIG!</a></li>
+            <li><a href="#midia-ooh">MÍDIA DOOH</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="#quem-somos">QUEM SOMOS</a></li>
+            <li><a href="bigsemanas.html">BIG SEMANAS</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="video-container">
+    <a href="index.html" class="logo-button">
+        <h1 class="logo">BIGDOOH</h1>
+    </a>
+    <video class="background-video" autoplay muted loop>
+        <source src="imgs/videomain.mp4" type="video/mp4">
+        Seu navegador não suporta o vídeo.
+    </video>
+    <h1 class="localizacoes-title">BLOG</h1>
+</div>
+
+<div class="container">
+
+    <div class="grid">
+        <div class="custom-card" data-aos="fade-up">
+            <img src="imgs/artigotendenciamercado.jpg" alt="tendências">
+            <h3>Cinco tendências para mídia em 2023</h3>
+            <p>Estudo Media Trends & Predictions 2023, da Kantar, enfatiza a diversificação de canais e novos comportamentos do consumidor.</p>
+            <a href="arttendencias.html" class="buttonespecificoda1">SAIBA MAIS</a>
+        </div>
+        <div class="custom-card" data-aos="fade-up">
+            <img src="imgs/PIB.jpg" alt="PIB">
+            <h3>O que esperar da economia Cearense em 2023</h3>
+            <p>O ano está apenas começando e uma das perguntas, na seara econômica, atualmente de maior evidência consiste sobre o desempenho econômico em 2023, e em particular, da nossa economia cearense.</p>
+            <a href="artcearaeconomia.html" class="button">SAIBA MAIS</a>
+        </div>
+        <div class="custom-card" data-aos="fade-up">
+            <img src="imgs/artigopublicidade.jpg" alt="publicidade">
+            <h3>Dados mostram o papel da publicidade na vida do brasileiro</h3>
+            <p>A publicidade na vida do brasileiro está por toda parte. Ela se faz presente em casa, na rua e na internet. Até mesmo quando não se espera, ela chega por meio de uma notificação de celular.</p>
+            <a href="artpublicidade.html" class="button">SAIBA MAIS</a>
+        </div>
+        <div class="custom-card" data-aos="fade-up">
+            <img src="imgs/artigoarmandoferrentini.jpg" alt="Inovação">
+            <h3>IA volta por cima – A evolução do mercado de OOH</h3>
+            <p>A mídia exterior sempre foi um dos primeiros segmentos do mercado a sofrer e também é aquele que se levanta rapidamente. Tem o grande poder de se reinventar.</p>
+            <a href="artevolucamidiaooh.html" class="button">SAIBA MAIS</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 BigDooh. Todos os direitos reservados.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+<script src="js/script.js"></script> 
+
+</body>
+</html>
