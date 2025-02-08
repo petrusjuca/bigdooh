@@ -10,10 +10,11 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cor-fundo);
-        height: 100%;
-        overflow-x: hidden; 
-        padding: 0; /* Remove preenchimento padrão */
+    height: 100%;
+    /* Remove overflow-x: hidden from here */
+    padding: 0; /* Remove preenchimento padrão */
 }
+
 
 /* Estilos para o cabeçalho */
 #header {
@@ -190,8 +191,9 @@ nav a:hover::after {
 .video-container {
     position: relative;
     height: 66vh; /* Altura do contêiner do vídeo */
-    overflow: hidden; /* Garante que não haja overflow */
+    overflow: hidden;/* Remove overflow: hidden */
 }
+
 
 .background-video {
     position: absolute;
@@ -527,6 +529,7 @@ footer {
             background-repeat: no-repeat;
             background-size: cover;
             position: relative;
+
         }
         @media (max-width: 768px) {
     .parallax {
@@ -634,11 +637,12 @@ html, body {
 .solucoes-list {
     display: flex;
     justify-content: center; /* Centraliza os cartões na linha */
-    gap: 20px; /* Espaçamento entre os cards */
     flex-wrap: wrap; /* Permite que os cartões quebrem para a próxima linha */
-    margin-bottom: 20px; /* Margem inferior */
+    padding: 20px; /* Add padding for better spacing */
+    box-sizing: border-box; /* Ensure padding is included in width */
     width: 100%; /* Faz a lista ocupar toda a largura */
 }
+
 
 .solucao-card {
     flex: 0 1 290px; /* Permite que os cards tenham uma largura mínima de 290px */
@@ -646,7 +650,7 @@ html, body {
     background: linear-gradient(45deg, rgb(255, 140, 0) 0%, rgb(255, 80, 0) 100%);
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    /* Remove overflow: hidden */
     text-align: left;
     opacity: 1; /* Mantenha visível por padrão */
     transition: transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease; /* Aumenta a duração da transição */
@@ -654,6 +658,7 @@ html, body {
     min-height: 300px; /* Aumenta a altura mínima para alongar os cartões */
     position: relative; /* Adicione esta linha */
 }
+
 
 /* Hover Effect */
 .solucao-card:hover {
@@ -1399,4 +1404,3 @@ textarea {
 
 #search-button:hover {
     background-color: #e55a1a; /* Cor ao passar o mouse */
-}
