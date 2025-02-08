@@ -242,6 +242,10 @@ nav a:hover::after {
 }
 
 @media (max-width: 768px) {
+
+    html, body {
+        overflow: hidden;
+    }
     .centered-text h2 {
         font-size: 100vw;
     }
@@ -276,6 +280,10 @@ button.learn-more .circle {
 }
 
 @media (max-width: 480px) {
+
+    html, body {
+        overflow: hidden;
+    }
     .centered-text h2 {
         font-size: 100vw;
     }
