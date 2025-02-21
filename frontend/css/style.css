@@ -740,7 +740,7 @@ html, body {
 }
 .projetos-list {
     display: flex; /* Ativa o Flexbox */
-    justify-content: flex-start; /* Alinha os cards à esquerda */
+    justify-content: center; /* Alinha os cards à esquerda */
     flex-wrap: wrap; /* Permite que os cards se movam para a próxima linha se não houver espaço */
     gap: 20px; /* Espaçamento entre os cards */
     margin: 20px 0; /* Margem superior e inferior para espaçamento */
@@ -757,6 +757,11 @@ html, body {
     overflow: hidden;
 }
 
+.button-containerprojetosespeciais {
+    width: 100%; /* Faz o container do botão ocupar toda a largura */
+    text-align: center; /* Centraliza o botão */
+    margin-top: 20px; /* Espaçamento entre os cards e o botão */
+}
 
 .projeto-card h3 {
     font-size: 1.5em;
@@ -1139,6 +1144,7 @@ html, body {
 }
 
 .empresa-foto {
+    
     max-width: 100%; /* Garante que a imagem não exceda a largura do contêiner */
     height: auto; /* Mantém a proporção da imagem */
     border-radius: 8px;
