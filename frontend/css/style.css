@@ -541,6 +541,8 @@ footer {
             background-size: cover;
             position: relative;
         }
+
+
         @media (max-width: 768px) {
     .parallax {
         background-attachment: scroll; /* No mobile, o fundo rola com o conteúdo */
@@ -598,6 +600,8 @@ footer {
             height: 220px;
         }
 
+
+
 html, body {
     width: 100%;
     height: 100%;
@@ -608,6 +612,8 @@ html, body {
         body {
     background-color: #111116; 
 }
+
+
 
 .background-image {
     background-image: url('imgs\vou usar 2.jpg');
@@ -635,7 +641,6 @@ html, body {
     border-radius: 8px;
     max-width: 1350px;
     width: 100%;
-    margin: 0 auto;
     box-sizing: border-box;
 }
 
@@ -655,8 +660,11 @@ html, body {
     width: 100%; /* Faz a lista ocupar toda a largura */
 }
 
+
 .solucao-card {
+
     flex: 0 1 290px; /* Permite que os cards tenham uma largura mínima de 290px */
+    max-width: 320px; /* Ajuste conforme necessário */
     height: 404px; /* Altura fixa para cada card */
     background: linear-gradient(45deg, rgb(255, 140, 0) 0%, rgb(255, 80, 0) 100%);
     border-radius: 10px;
@@ -671,6 +679,8 @@ html, body {
     position: relative; /* Adicione esta linha */
 }
 
+
+
 /* Hover Effect */
 .solucao-card:hover {
     transform: scale(1.05); /* Aumenta apenas o cartão hoverado */
@@ -678,7 +688,6 @@ html, body {
     border: 3px solid #ff6f20; /* Borda laranja ao passar o mouse */
     z-index: 10; /* Garante que o cartão hoverado fique acima dos outros */
 }
-
 
 
 .mensagem-container {
@@ -738,29 +747,32 @@ html, body {
     margin-bottom: 30px;
     color: #333; /* Cor do título */
 }
+
 .projetos-list {
     display: flex; /* Ativa o Flexbox */
-    justify-content: center; /* Alinha os cards à esquerda */
-    flex-wrap: wrap; /* Permite que os cards se movam para a próxima linha se não houver espaço */
+    justify-content: space-between; /* Distribui os cards uniformemente */
+    flex-wrap: nowrap; /* Garante que os cards fiquem sempre na mesma linha */
     gap: 20px; /* Espaçamento entre os cards */
-    margin: 20px 0; /* Margem superior e inferior para espaçamento */
+    margin: 20px 0; /* Margem superior e inferior */
 }
+
+
 .projeto-card {
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    max-width: 300px;
-    text-align: left;
+    overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
-    overflow: hidden;
+    width: calc(100% / 4 - 20px); /* Divide o espaço igualmente para 4 cards */
+    max-width: 300px; /* Limita a largura máxima */
 }
 
 .button-containerprojetosespeciais {
-    width: 100%; /* Faz o container do botão ocupar toda a largura */
-    text-align: center; /* Centraliza o botão */
-    margin-top: 20px; /* Espaçamento entre os cards e o botão */
+   
+    justify-content: center; /* Centraliza o botão */
+    margin-top: 20px; /* Espaço entre os cards e o botão */
+    width: 100%;
 }
 
 .projeto-card h3 {
@@ -785,22 +797,7 @@ html, body {
     color: #333; /* Cor do título */
 }
 
-.projetos-list {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
 
-.projeto-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    overflow: hidden; /* Esconde o excedente */
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-    width: 300px; /* Largura fixa dos cards */
-}
 
 .projeto-card:hover {
     transform: scale(1.05); /* Aumenta o card ao passar o mouse */
@@ -841,21 +838,9 @@ html, body {
     color: #fffbfb; /* Cor do título */
 }
 
-.projetos-list {
-    display: flex; /* Ativa o Flexbox */
-    justify-content: flex-start; /* Alinha os cards à esquerda */
-    flex-wrap:wrap /* Permite que os cards se movam para a próxima linha se não houver espaço */
 
-    margin 20px 0; /* Margem superior e inferior para espaçamento */
-}
 
-.projetos-list {
-    display: flex; /* Ativa o Flexbox */
-    justify-content: center; /* Alinha os cards à esquerda */
-    flex-wrap: wrap; /* Permite que os cards se movam para a próxima linha se não houver espaço */
-    gap: 20px; /* Espaçamento entre os cards */
-    margin: 20px 0; /* Margem superior e inferior para espaçamento */
-}
+
 
 .card {
     flex: 0 1 290px; /* Permite que os cards tenham uma largura mínima de 290px */
@@ -1116,6 +1101,7 @@ html, body {
 /* Ajustes para a seção de contato */
 .contact-section {
     display: flex;
+    width: 1500px;
     justify-content: center;
     align-items: center;
     padding: 60px 20px;
@@ -1125,22 +1111,24 @@ html, body {
 
 .contact-container {
     display: flex;
-    max-width: 1200px; /* Largura máxima da seção */
+    max-width: 12000px; /* Largura máxima da seção */
     width: 100%;
     background-color: #111116; /* Cor de fundo da seção */
 }
 
 .info-container {
-    flex: 2; /* Permite que a área de informações ocupe mais espaço */
+     max-width: 12000px;
+    flex: 2;
     padding: 40px;
     color: #ffffff; /* Cor do texto */
 }
 
 .image-container {
-    flex: 1; /* A imagem ocupará uma proporção adequada */
+   
     display: flex; /* Flexbox para centralizar a imagem */
     justify-content: center; /* Centraliza a imagem horizontalmente */
     align-items: center; /* Centraliza a imagem verticalmente */
+    width: 310px;
 }
 
 .empresa-foto {
