@@ -579,9 +579,8 @@ footer {
 
         .solucoes-list {
             display: flex;
-            justify-content: space-around;
             flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: 20px;   
         }
 
         .solucao-card {
@@ -663,7 +662,6 @@ html, body {
 
 .solucao-card {
 
-    flex: 0 1 290px; /* Permite que os cards tenham uma largura mínima de 290px */
     max-width: 320px; /* Ajuste conforme necessário */
     height: 404px; /* Altura fixa para cada card */
     background: linear-gradient(45deg, rgb(255, 140, 0) 0%, rgb(255, 80, 0) 100%);
