@@ -10,6 +10,36 @@
   <!-- CSS do Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
+    @media (max-width: 1024px) {
+  .container {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 15px;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  .info div {
+    font-size: 1em;
+  }
+  .buttondetalhes {
+    width: 100%;
+    text-align: center;
+  }
+  .map-container {
+    min-height: 300px; /* Ajuste de altura para melhor visualização */
+  }
+  #map {
+    height: 300px; /* Evita cortes no mapa */
+  }
+}
+
+
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: #111116;
@@ -27,7 +57,7 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow:  0 4px 20px rgba(0, 0, 0, 0.1);
-      height: 70%;
+      min-height: 50%;
       width: 40%;
       position: center;
       transition: transform 0.3s;
@@ -37,10 +67,13 @@
       align-items: flex-start;
     }
     .foto {
-      width: 100%;
-      margin-right: 20px;
-      display: none;
-    }
+    width: 100%; /* Garante que ocupa a largura disponível */
+    max-height: 250px; /* Define um limite de altura */
+    object-fit: contain; /* Evita cortes */
+    display: none; /* Mantém oculto até ser mostrado */
+}
+
+
     .info {
       display: flex;
       flex-direction: column;
