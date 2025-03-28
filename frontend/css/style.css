@@ -1231,6 +1231,35 @@ textarea {
     width: 100%; /* A linha se expande para preencher o link */
     left: 0; /* Move a linha para a esquerda */
 }
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column; /* Empilha os elementos */
+        align-items: center;
+    }
+
+    .info-container {
+        text-align: center; /* Centraliza os textos */
+    }
+
+    .image-container {
+        max-width: 300px; /* Reduz a imagem */
+    }
+}
+
+/* Para telas muito pequenas (celulares) */
+@media (max-width: 480px) {
+    .contact-section {
+        padding: 40px 10px; /* Ajusta o padding */
+    }
+
+    .info-container {
+        padding: 20px;
+    }
+
+    .empresa-foto {
+        width: 80%; /* Reduz a imagem */
+    }
+}
 
 .whatsapp-logo,
 .email-logo,
