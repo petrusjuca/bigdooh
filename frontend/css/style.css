@@ -144,7 +144,7 @@ nav a:hover::after {
 
     .mobile-menu {
         display: block; /* Exibe o menu móvel */
-        overflow: hidden; /* Evita overflow */
+         overflow: hidden; /* Evita overflow */
     }
 }
 
@@ -1097,7 +1097,7 @@ html, body {
 /* Ajustes para a seção de contato */
 .contact-section {
     display: flex;
-    width: 1500px;
+    width: 100%; /* Removido valor fixo */
     justify-content: center;
     align-items: center;
     padding: 60px 20px;
@@ -1107,16 +1107,17 @@ html, body {
 
 .contact-container {
     display: flex;
-    max-width: 12000px; /* Largura máxima da seção */
+    max-width: 1200px; /* Valor corrigido */
     width: 100%;
     background-color: #111116; /* Cor de fundo da seção */
 }
 
 .info-container {
-     max-width: 12000px;
+
     flex: 2;
     padding: 40px;
     color: #ffffff; /* Cor do texto */
+    min-width: 300px; /* Garante que não fique muito pequeno */
 }
 
 .image-container {
@@ -1124,7 +1125,8 @@ html, body {
     display: flex; /* Flexbox para centralizar a imagem */
     justify-content: center; /* Centraliza a imagem horizontalmente */
     align-items: center; /* Centraliza a imagem verticalmente */
-    width: 310px;
+    width: 100%; /* Para se adaptar em telas menores */
+    max-width: 400px; /* Limita o tamanho da imagem */
 }
 
 .empresa-foto {
@@ -1132,6 +1134,36 @@ html, body {
     max-width: 100%; /* Garante que a imagem não exceda a largura do contêiner */
     height: auto; /* Mantém a proporção da imagem */
     border-radius: 8px;
+    
+}
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column; /* Empilha os elementos */
+        align-items: center;
+    }
+
+    .info-container {
+        text-align: center; /* Centraliza os textos */
+    }
+
+    .image-container {
+        max-width: 300px; /* Reduz a imagem */
+    }
+}
+
+/* Para telas muito pequenas (celulares) */
+@media (max-width: 480px) {
+    .contact-section {
+        padding: 40px 10px; /* Ajusta o padding */
+    }
+
+    .info-container {
+        padding: 20px;
+    }
+
+    .empresa-foto {
+        width: 80%; /* Reduz a imagem */
+    }
 }
 
 h2 {
@@ -1230,35 +1262,6 @@ textarea {
 .contact-link a:hover::after {
     width: 100%; /* A linha se expande para preencher o link */
     left: 0; /* Move a linha para a esquerda */
-}
-@media (max-width: 768px) {
-    .contact-container {
-        flex-direction: column; /* Empilha os elementos */
-        align-items: center;
-    }
-
-    .info-container {
-        text-align: center; /* Centraliza os textos */
-    }
-
-    .image-container {
-        max-width: 300px; /* Reduz a imagem */
-    }
-}
-
-/* Para telas muito pequenas (celulares) */
-@media (max-width: 480px) {
-    .contact-section {
-        padding: 40px 10px; /* Ajusta o padding */
-    }
-
-    .info-container {
-        padding: 20px;
-    }
-
-    .empresa-foto {
-        width: 80%; /* Reduz a imagem */
-    }
 }
 
 .whatsapp-logo,
