@@ -127,8 +127,8 @@
             <li><a href="localizacoes.html">LOCALIZAÇÕES</a></li>
             <li><a href="bigsemanas.html">BIG SEMANAS</a></li>
             <li><a href="blog.html">MÍDIA DOOH</a></li>
-            <li><a href="#quem-somos">QUEM SOMOS</a></li>
-            <li><a href="#contact-section">FALA BIG!</a></li>
+            <li><a href="index.html#quem-somos">QUEM SOMOS</a></li>
+            <li><a href="index.html#contact-section">FALA BIG!</a></li>
         </ul>
     </nav>
 </header>
@@ -146,37 +146,8 @@
     <a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
     </a>
-    <table class="big-semanas-table">
-        <thead>
-            <tr>
-                <th>Big Semana</th>
-                <th>Início</th>
-                <th>Término</th>
-            </tr>
-        </thead>
-        <tbody id="table-body">
-            <!-- Dados serão inseridos dinamicamente via JavaScript -->
-        </tbody>
-    </table>
 
-    <script>
-       document.addEventListener("DOMContentLoaded", function() {
-    fetch('/api/bigsemanas')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('table-body');
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td data-label="BIG Semana">${item.BIGSEMANA}</td>
-                    <td data-label="Início">${item.INÍCIO}</td>
-                    <td data-label="Término">${item.TÉRMINO}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Erro ao carregar dados:', error));
-});
-    </script>
+
+  
 </body>
 </html>
