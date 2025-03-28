@@ -1207,7 +1207,7 @@ textarea {
 }
 
 .button-enviar {
-    width: 100%; /* Largura total do botão */
+    width: calc(100% - 20px);
     padding: 10px; /* Preenchimento interno */
     background-color: #ff6f20; /* Cor de fundo do botão */
     color: #ffffff; /* Cor do texto do botão */
