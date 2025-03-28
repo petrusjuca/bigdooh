@@ -1218,6 +1218,9 @@ textarea {
     outline: none; /* Remove o contorno ao focar no botão */
     box-shadow: none; /* Remove qualquer sombra */
     transition: background-color 0.3s ease; /* Transição suave */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    max-width: 100%; /* Garante que não ultrapasse o contêiner */
+    margin: 0 auto; /* Centraliza se houver alguma margem automática */
 }
 
 .button-enviar:hover {
