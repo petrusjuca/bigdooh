@@ -10,11 +10,10 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     background-color: var(--cor-fundo);
-        height: 100%;
-        overflow-x: hidden; 
-        padding: 0; /* Remove preenchimento padrão */
     height: 100%;
-    /* Remove overflow-x: hidden from here */
+    padding: 0; /* Remove preenchimento padrão */
+    height: 100%;
+    overflow-x: hidden;
     padding: 0; /* Remove preenchimento padrão */
 }
 
@@ -871,7 +870,7 @@ html, body {
 }
 
 .title {
-    color: #fff;
+    color: #000000;
     font-weight: bolder;
     font-size: x-large;
     position: absolute; /* Permite o posicionamento absoluto do título */
@@ -881,7 +880,7 @@ html, body {
 }
 
 .card .desc {
-    color: #000000;
+    color: #ffffff;
     opacity: 75%;
     font-size: medium;
     font-weight:bold;
