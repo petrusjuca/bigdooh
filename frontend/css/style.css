@@ -128,7 +128,6 @@ nav a:hover::after {
         right: 0; /* Alinha à direita */
         width: 100%; /* Largura da lista */
         overflow: hidden; /* Evita overflow */
-
         height: 92vh; /* Altura da lista */
         background: #23232e; /* Cor de fundo da lista */
         flex-direction: column; /* Alinha itens em coluna */
@@ -145,6 +144,7 @@ nav a:hover::after {
 
     .mobile-menu {
         display: block; /* Exibe o menu móvel */
+        overflow: hidden; /* Evita overflow */
     }
 }
 
