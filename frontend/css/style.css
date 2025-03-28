@@ -1408,3 +1408,8 @@ textarea {
 #search-button:hover {
     background-color: #e55a1a; /* Cor ao passar o mouse */
 }
+.bigsemanastable-containerfoto img {
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 900px;
+}
