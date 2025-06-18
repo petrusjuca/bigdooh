@@ -208,6 +208,13 @@ nav a:hover::after {
     object-fit: cover; /* Cobre todo o contêiner */
 }
 
+.logo {
+    margin-left: 2%;
+    margin-top: 2%;
+    width: 270px; /* ajuste conforme necessário */
+    height: auto; /* mantém a proporção */
+}
+
 .centered-text {
     position: absolute;
     bottom: 20px; /* Ajusta para ficar no fundo */
