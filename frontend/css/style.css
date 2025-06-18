@@ -1310,8 +1310,8 @@ textarea {
 }
 
 .whatsapp-button img {
-    width: 80%; /* Ajusta o tamanho do ícone */
-    height: 80%;
+    width: 700%; /* Ajusta o tamanho do ícone */
+    height: 300%;
 }
 
 .whatsapp-button:hover {
