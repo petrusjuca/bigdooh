@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+esta ocorrendo vazÂo no container em telas menores <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -36,7 +36,6 @@
   }
   #map {
     height: 300px; /* Evita cortes no mapa */
-    width: 100%;
   }
 }
 
@@ -57,23 +56,22 @@
       background: white;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      box-shadow:  0 4px 20px rgba(0, 0, 0, 0.1);
       min-height: 50%;
-      width: 100%;
-      max-width: 600px; /* Máximo de largura para manter legível */
+      width: 40%;
+      position: center;
       transition: transform 0.3s;
-      box-sizing: border-box;
     }
     .header {
       display: flex;
       align-items: flex-start;
     }
     .foto {
-          max-width: 100%;
-          height: auto;
-         object-fit: contain;
-        }
-
+    width: 100%; /* Garante que ocupa a largura disponível */
+    max-height: 250px; /* Define um limite de altura */
+    object-fit: contain; /* Evita cortes */
+    display: none; /* Mantém oculto até ser mostrado */
+}
 
 
     .info {
