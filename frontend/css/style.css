@@ -873,12 +873,22 @@ html, body {
 }
 
 .title {
-    color: #000000;
+    color: #ffffff;
     font-weight: bolder;
     font-size: x-large;
     position: absolute; /* Permite o posicionamento absoluto do título */
     bottom: -15px; /* Ajusta a distância do fundo para descer a mensagem */
     left: 10px; /* Distância da esquerda */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); /* Sombreamento para melhor legibilidade */
+}
+
+.title1 {
+    color: #ffffff;
+    font-weight: bolder;
+    font-size: x-large;
+    position: absolute; /* Permite o posicionamento absoluto do título */
+    bottom: -15px; /* Ajusta a distância do fundo para descer a mensagem */
+    left:32px; /* Distância da esquerda */
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); /* Sombreamento para melhor legibilidade */
 }
 
