@@ -36,6 +36,7 @@
   }
   #map {
     height: 300px; /* Evita cortes no mapa */
+    width: 100%;
   }
 }
 
@@ -68,11 +69,11 @@
       align-items: flex-start;
     }
     .foto {
-    width: 100%; /* Garante que ocupa a largura disponível */
-    max-height: 250px; /* Define um limite de altura */
-    object-fit: contain; /* Evita cortes */
-    display: none; /* Mantém oculto até ser mostrado */
-}
+          max-width: 100%;
+          height: auto;
+         object-fit: contain;
+        }
+
 
 
     .info {
