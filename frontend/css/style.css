@@ -12,9 +12,7 @@ body {
     width: 100%;
     overflow-x: hidden; /* Mantemos aqui, que é mais seguro que no <html> */
 }
-* {
-    border: 1px solid red !important;
-}
+
 :root {
     --cor-primaria: #ff6f20; /* Laranja */
     --cor-secundaria: #000000; /* Preto */
@@ -486,11 +484,7 @@ footer {
             margin-top: 20px;   
         }
 
-        .solucao-card {
-            width: 30%;
-            margin: 10px;
-            text-align: center;
-        }
+       
 
         .solucao-imagem {
             width: 100%;
@@ -1340,21 +1334,35 @@ textarea {
     }
 
     /* --- SEÇÃO DE VÍDEO --- */
-    .centered-text h2 {
-        font-size: 5vw; /* Tamanho de fonte mais adequado para mobile */
-    }
+   
 
     .button-containermain {
-        flex-direction: column; /* Botões um embaixo do outro */
-        gap: 15px;
-        bottom: 5%;
-    }
+    /* 1. Posicionamento do container */
+    position: absolute;
+    bottom: 12%;       /* Distância do fundo da tela (ajuste se precisar) */
+    width: 100%;       /* Ocupa toda a largura para poder centralizar o conteúdo */
+    left: 0;           /* Zera a posição na esquerda */
+    transform: none;   /* Remove qualquer transformação anterior */
+    z-index: 2;
 
-    button.learn-more {
-        width: 12rem; /* Tamanho um pouco maior para facilitar o clique */
-        left: 50%;
-        transform: translateX(-50%);
-    }
+    /* 2. Layout dos botões com Flexbox */
+    display: flex;
+    flex-direction: row;        /* Garante que fiquem lado a lado */
+    justify-content: center;    /* <<< A CHAVE: Centraliza os botões na linha */
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 59px                  /* Espaço horizontal entre os botões */
+}
+
+button.learn-more {
+    /* Reseta o posicionamento do botão individual */
+    position: relative;
+    left: auto;
+    transform: none;
+
+    /* Podemos definir um tamanho fixo ou deixar automático */
+    /* width: 10rem;  // Mantém o tamanho que você já tinha, se desejar */
+}
 
     /* --- SEÇÃO DE NÚMEROS --- */
     .statistics {
@@ -1382,11 +1390,53 @@ textarea {
         gap: 30px; /* Espaço entre os cards */
     }
 
-    .solucao-card {
-        width: 90%; /* Ocupa quase toda a largura com uma margem */
-        height: auto; /* Altura automática para o conteúdo caber */
-        min-height: auto;
-    }
+/* --- Estilos Corrigidos para os Cards de Soluções --- */
+.solucoes-list {
+    display: flex;
+    flex-direction: column; /* Cards em coluna */
+    align-items: center;    /* Centraliza a coluna de cards */
+    gap: 30px;              /* Espaço vertical entre os cards */
+    width: 100%;
+}
+
+.solucao-card {
+    width: 0%;             /* O card ocupa 90% da largura da tela */
+    max-width: 380px;       /* Uma largura máxima para tablets */
+    background: linear-gradient(45deg, rgb(255, 140, 0) 0%, rgb(255, 80, 0) 100%);
+    border-radius: 12px;    /* Bordas um pouco mais arredondadas */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;       /* Garante que o conteúdo não vaze do card */
+    text-align: left;
+    display: flex;
+    flex-direction: column; /* Organiza a imagem e o conteúdo de texto verticalmente */
+}
+
+.solucao-imagem, .solucao-imagem1 {
+    width: 100%;
+    height: 200px;         /* <<< ALTURA FIXA para a imagem, criando a proporção correta */
+    object-fit: cover;     /* Faz a imagem preencher o espaço sem distorcer */
+}
+
+.solucao-card-content {
+    padding: 20px 25px; /* Espaçamento interno para o texto (vertical e horizontal) */
+    color: white;
+    flex-grow: 1; /* Faz esta área crescer para que todos os cards tenham a mesma altura */
+    display: flex;
+    flex-direction: column;
+}
+
+.solucao-card-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.5em; /* 24px */
+}
+
+.solucao-card-content p {
+    margin: 0;
+    font-size: 1em; /* 16px */
+    line-height: 1.6; /* Espaçamento entre as linhas do parágrafo */
+    flex-grow: 1;
+}
+
 
     /* --- SEÇÃO DE PROJETOS ESPECIAIS (CORREÇÃO PRINCIPAL) --- */
     .projetos-list {
