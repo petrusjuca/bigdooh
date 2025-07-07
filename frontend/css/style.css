@@ -1300,20 +1300,20 @@ textarea {
     }
 
     /* --- MENU DE NAVEGAÇÃO --- */
-    .nav-list {
-        position: absolute;
-        top: 8vh;
-        right: 0;
-        width: 100vw; /* Ocupa a largura toda da tela */
-        height: 92vh;
-        background: #23232e;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in;
-        z-index: 99; /* Garante que fique acima de outros elementos */
-    }
+.nav-list {
+    position: absolute;
+    top: 8vh;
+    right: 0;
+    width: 100%; /* <<< CORRIGIDO! */
+    height: 92vh;
+    background: #23232e;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in;
+    z-index: 99;
+}
 
     .nav-list li {
         margin-left: 0;
