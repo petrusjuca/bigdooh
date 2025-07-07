@@ -110,43 +110,7 @@ nav a:hover::after {
 }
 
 /* Estilos responsivos */
-@media (max-width: 999px) {     
-    body {
-       
 
-    }
-
-    .mobile-menu {
-        display: none; /* Esconde o menu móvel por padrão */
-        cursor: pointer; /* Indica que é clicável */
-        margin-top: 10px;
-    }                                   
-
-    .nav-list {
-        position: absolute; /* Posiciona a lista de navegação */
-        top: 8vh; /* Alinha abaixo do nav */
-        right: 0; /* Alinha à direita */
-        width: 100%; /* Largura da lista */
-        overflow: hidden; /* Evita overflow */
-        height: 92vh; /* Altura da lista */
-        background: #23232e; /* Cor de fundo da lista */
-        flex-direction: column; /* Alinha itens em coluna */
-        align-items: center; /* Centraliza itens */
-        justify-content: space-around; /* Espaça igualmente */
-        transform: translateX(100%); /* Esconde a lista fora da tela */
-        transition: transform 0.3s ease-in; /* Transição suave ao abrir */
-    }
-
-    .nav-list li {
-        margin-left: 0; /* Remove margem à esquerda */
-        opacity: 0; /* Inicialmente invisível */
-    }
-
-    .mobile-menu {
-        display: block; /* Exibe o menu móvel */
-         overflow: hidden; /* Evita overflow */
-    }
-}
 
 .nav-list.active {
     transform: translateX(0); /* Mostra a lista ao definir a classe active */
@@ -248,83 +212,7 @@ nav a:hover::after {
     }
 }
 
-@media (max-width: 768px) {
 
-    html, body {
-       
-    }
-    .centered-text h2 {
-        font-size: 100vw;
-    }
-    button.learn-more {
-        width: 5rem; /* Largura do botão */
-        height: auto; /* Altura automática */
-        position: relative; /* Muda para absolute */
-        left: 15%;
-        transform: translateX(-70%); /* Centraliza o botão horizontalmente */
-        z-index: 3; /* Fica acima do texto */
-    }
-    .centered-text h2 {
-    font-size: 90vw; /* Tamanho da fonte */
-    margin: 0; /* Remove margens */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra para destacar o texto */
-    opacity: 0; /* Começa invisível */
-    animation: fadeIn 1s forwards; /* Animação de fade-in */
-    color: #f8f9fa;
-    font-weight: bolder;
-
-}
-button.learn-more .circle {
-    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-    position: relative;
-    display: block;
-    margin: 10px;
-
-    background: #ff6f20; /* Cor de fundo do círculo */
-    border-radius: 1.625rem; /* Bordas arredondadas */
-}
-
-}
-
-@media (max-width: 480px) {
-
-    html, body {
-     
-    }
-    .centered-text h2 {
-        font-size: 100vw;
-    }
-    .centered-text h2 {
-        font-size: 10vw; /* Tamanho da fonte */
-        margin: 0; /* Remove margens */
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra para destacar o texto */
-        opacity: 0; /* Começa invisível */
-        animation: fadeIn 1s forwards; /* Animação de fade-in */
-        color: #f8f9fa;
-        font-weight: bolder;
-    }
-    .centered-text {
-        position: absolute;
-        bottom: 20px; /* Ajusta para ficar no fundo */
-        left: 8%; /* Centraliza horizontalmente */
-        transform: translateX(-5%); /* Centraliza o texto */
-        text-align: center;
-        color: #f8f9fa;
-        z-index: 2; /* Fica acima do vídeo */
-        animation: fadeIn 1s forwards; /* Animação de fade-in */
-        align-items: center;
-    }
-
-    button.learn-more .circle {
-    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-    position: relative;
-    display: block;
-    margin: 10px;
-
-    background: #ff6f20; /* Cor de fundo do círculo */
-    border-radius: 1.625rem; /* Bordas arredondadas */
-}
-}
 button {
     position: absolute;
     display: inline-block;
@@ -443,17 +331,7 @@ button.learn-more .locais-text {
     }
 }
 
-@media (max-width: 768px) {
-    .centered-text h2 {
-        font-size: 4vw;
-    }
-}
 
-@media (max-width: 480px) {
-    .centered-text h2 {
-        font-size: 5vw;
-    }
-}
 section {
     padding: 40px 20px;
     background: var(--cor-branco);
@@ -480,6 +358,8 @@ footer {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    flex-direction: column; /* Empilha os itens */
+    align-items: center;    /* Centraliza eles */
 }
 
 .stat {
@@ -553,11 +433,8 @@ footer {
         }
 
 
-        @media (max-width: 768px) {
-    .parallax {
-        background-attachment: scroll; /* No mobile, o fundo rola com o conteúdo */
-    }
-}
+       
+
 
                 /* Estilos para a imagem de fundo com efeito parallax */
                 .parallax1 {
@@ -1095,21 +972,7 @@ html, body {
     transform: scale(1.05); /* Aumenta o tamanho do botão ao passar o mouse */
     color: rgb(255, 255, 255); /* Cor do texto */
 }
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 2em;
-    }
-}
 
-@media (max-width: 480px) {
-    .section-title {
-        font-size: 1.5em;
-    }
-
-    .content-wrapper {
-        flex-direction: column; /* Coluna em smartphones */
-    }
-}
 .about-image {
     width: 100%; /* Ajusta a largura da imagem ao contêiner */
     height: auto; /* Mantém a proporção da imagem */
@@ -1157,35 +1020,10 @@ html, body {
     border-radius: 8px;
     
 }
-@media (max-width: 768px) {
-    .contact-container {
-        flex-direction: column; /* Empilha os elementos */
-        align-items: center;
-    }
 
-    .info-container {
-        text-align: center; /* Centraliza os textos */
-    }
-
-    .image-container {
-        max-width: 300px; /* Reduz a imagem */
-    }
-}
 
 /* Para telas muito pequenas (celulares) */
-@media (max-width: 480px) {
-    .contact-section {
-        padding: 40px 10px; /* Ajusta o padding */
-    }
 
-    .info-container {
-        padding: 20px;
-    }
-
-    .empresa-foto {
-        width: 80%; /* Reduz a imagem */
-    }
-}
 
 h2 {
     margin-bottom: 20px;
@@ -1297,18 +1135,7 @@ textarea {
     margin-right: 8px; /* Espaço entre a imagem e o texto */
 }
 
-/* Adicionando a regra para ocultar a imagem em dispositivos móveis */
-@media (max-width: 768px) { /* Para dispositivos com largura menor que 768px */
-    .image-container {
-        display: none; /* Oculta a imagem */
-    }
-}
 
-@media (max-width: 768px) { /* Para dispositivos com largura menor que 768px */
-    .image-container {
-        display: none; /* Oculta a imagem */
-    }
-}
 
 .whatsapp-button {
     position: fixed; /* Fixa o botão na tela */
@@ -1466,4 +1293,137 @@ textarea {
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     min-width: 900px;
+}
+
+@media (max-width: 999px) {
+
+    /* --- GERAL --- */
+    body {
+        overflow-x: hidden; /* Previne a rolagem horizontal como segurança */
+    }
+
+    /* --- MENU DE NAVEGAÇÃO --- */
+    .nav-list {
+        position: absolute;
+        top: 8vh;
+        right: 0;
+        width: 100vw; /* Ocupa a largura toda da tela */
+        height: 92vh;
+        background: #23232e;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in;
+        z-index: 99; /* Garante que fique acima de outros elementos */
+    }
+
+    .nav-list li {
+        margin-left: 0;
+        opacity: 0;
+    }
+
+    .mobile-menu {
+        display: block; /* Mostra o ícone do menu hamburguer */
+        z-index: 100; /* Garante que o menu fique clicável */
+    }
+
+    /* --- SEÇÃO DE VÍDEO --- */
+    .centered-text h2 {
+        font-size: 5vw; /* Tamanho de fonte mais adequado para mobile */
+    }
+
+    .button-containermain {
+        flex-direction: column; /* Botões um embaixo do outro */
+        gap: 15px;
+        bottom: 5%;
+    }
+
+    button.learn-more {
+        width: 12rem; /* Tamanho um pouco maior para facilitar o clique */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* --- SEÇÃO DE NÚMEROS --- */
+    .statistics {
+        flex-direction: column; /* Empilha os itens */
+        align-items: center;
+    }
+
+    .stat h3 {
+        font-size: 2.5em;
+    }
+
+    .stat p {
+        font-size: 1em;
+    }
+
+    /* --- PARALLAX --- */
+    .parallax, .parallax1 {
+        background-attachment: scroll; /* Remove o efeito parallax que não funciona bem no mobile */
+    }
+    
+    /* --- SEÇÃO DE SOLUÇÕES --- */
+    .solucoes-list {
+        flex-direction: column; /* Empilha os cards */
+        align-items: center;
+        gap: 30px; /* Espaço entre os cards */
+    }
+
+    .solucao-card {
+        width: 90%; /* Ocupa quase toda a largura com uma margem */
+        height: auto; /* Altura automática para o conteúdo caber */
+        min-height: auto;
+    }
+
+    /* --- SEÇÃO DE PROJETOS ESPECIAIS (CORREÇÃO PRINCIPAL) --- */
+    .projetos-list {
+        flex-direction: column; /* MUITO IMPORTANTE: Empilha os cards */
+        align-items: center;
+        flex-wrap: wrap; /* Garante a quebra de linha */
+    }
+
+    .projetos-list .card {
+        width: 90%; /* Ocupa quase toda a largura */
+        flex: 1 1 auto; /* Reseta as propriedades de flex do desktop */
+    }
+
+    /* --- SEÇÃO QUEM SOMOS --- */
+    .content-wrapper {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    /* --- SEÇÃO CONTATO --- */
+    .contact-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .info-container {
+        text-align: center;
+    }
+
+    .image-container {
+        display: none; /* Oculta a imagem decorativa do formulário */
+    }
+    
+    /* --- TABELA BIG SEMANAS (CORREÇÃO PRINCIPAL 2) --- */
+    .bigsemanastable-containerfoto img {
+        min-width: 100%; /* MUITO IMPORTANTE: Remove a largura mínima de 900px */
+        width: 100%;
+    }
+}
+
+
+/* Ajustes ainda menores para celulares pequenos (telas menores que 480px) */
+@media (max-width: 480px) {
+    .centered-text h2 {
+        font-size: 7vw; /* Aumenta um pouco a fonte no celular */
+    }
+
+    .section-title {
+        font-size: 1.8em;
+    }
 }
