@@ -214,7 +214,6 @@ nav a:hover::after {
 
 
 button {
-    position: absolute;
     display: inline-block;
     cursor: pointer;
     outline: none;
@@ -1066,27 +1065,22 @@ textarea {
 }
 
 .button-enviar {
-    width: calc(100% - 20px);
-    padding: 10px; /* Preenchimento interno */
-    background-color: #ff6f20; /* Cor de fundo do botão */
-    color: #ffffff; /* Cor do texto do botão */
-    border: none; /* Remove a borda do botão */
-    border-radius: 4px; /* Bordas arredondadas */
-    font-size: 16px; /* Tamanho da fonte do botão */
-    cursor: pointer; /* Cursor de ponteiro ao passar o mouse sobre o botão */
-    outline: none; /* Remove o contorno ao focar no botão */
-    box-shadow: none; /* Remove qualquer sombra */
-    transition: background-color 0.3s ease; /* Transição suave */
-    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
-    max-width: 100%; /* Garante que não ultrapasse o contêiner */
-    margin: 0 auto; /* Centraliza se houver alguma margem automática */
+    width: 100%; /* Ocupa 100% da largura do pai */
+    padding: 12px; /* Aumentei um pouco para ficar mais clicável */
+    background-color: #ff6f20;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box; /* Adicione esta linha mágica! */
 }
 
 .button-enviar:hover {
-    background-color: #e65c1b; /* Cor ao passar o mouse */
-    background-color: #000000; /* Cor mais escura ao passar o mouse */
-    transform: scale(1.05); /* Aumenta o tamanho do botão ao passar o mouse */
-    color: rgb(255, 255, 255); /* Cor do texto */
+    background-color: #000000;
+    transform: scale(1.05);
+    color: rgb(255, 255, 255);
 }
 
 .contact-link a {
