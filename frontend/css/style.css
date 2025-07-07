@@ -1,3 +1,6 @@
+* {
+    border: 1px solid red !important;
+}
 :root {
     --cor-primaria: #ff6f20; /* Laranja */
     --cor-secundaria: #000000; /* Preto */
