@@ -213,7 +213,7 @@ nav a:hover::after {
     opacity: 0; /* Começa invisível */
     animation: fadeIn 1s forwards; /* Animação de fade-in */
     color: #f8f9fa;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 @keyframes fadeIn {
@@ -1199,15 +1199,17 @@ textarea {
 
 .localizacoes-title {
     position: absolute; /* Permite posicionar sobre o vídeo */
-    top: 50%; /* Posiciona verticalmente no meio */
+    top: 86%; /* Posiciona verticalmente no meio */
     left: 50%; /* Posiciona horizontalmente no meio */
     transform: translate(-50%, -50%); /* Centraliza completamente */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 4em; /* Tamanho da fonte maior */
+    font-size: 2.5em; /* Tamanho da fonte maior */
     font-weight:500; /* Deixa o texto em negrito */
     z-index: 10; /* Garante que fique acima do vídeo */
     letter-spacing: 2px; /* Espaçamento entre letras */
     animation: fadeIn 1.5s ease-in-out; /* Animação de entrada */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+   
 
 }
 
