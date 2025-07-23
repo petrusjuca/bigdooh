@@ -90,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const typingElement = document.getElementById("typing-effect");
     let index = 0;
 
+    // Adiciona um espaço inicial para garantir que o cursor pisque
+    typingElement.textContent = " ";
+
     function type() {
         if (index < text.length) {
             typingElement.textContent += text.charAt(index); // Adiciona uma letra por vez
@@ -100,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicia o efeito de digitação
     type();
-    typingElement.style.borderRight = '2px solid white'; // Adiciona a borda ao final
+    //typingElement.style.borderRight = '2px solid white'; // Adiciona a borda ao final
 });
 
 class MobileNavbar {
@@ -147,4 +150,3 @@ class MobileNavbar {
     ".nav-list li",
   );
   mobileNavbar.init();
-    
