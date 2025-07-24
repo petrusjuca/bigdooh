@@ -620,18 +620,22 @@ html, body {
     margin: 10px auto; /* Centraliza a linha e adiciona margem */
 }
 .typing-effect {
-    border-right: 2px solid #ffffff; /* Cursor */
-    overflow: hidden; /* Esconde o texto que não é exibido */
-    width: 100%; /* Para que o cursor fique alinhado */
-    animation: blink 0.7s step-end infinite; /* Animação do cursor */
-    overflow: hidden;
-
+    display: inline;
+    opacity: 1 !important;
 }
-
-@keyframes blink {
-    50% {
-        border-color: transparent; /* Faz o cursor piscar */
-    }
+.typing-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 2.5em;
+  background: #fff;
+  margin-left: 2px;
+  vertical-align: baseline;
+  position: relative;
+  animation: blink-cursor 0.7s steps(1) infinite;
+}
+@keyframes blink-cursor {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 
