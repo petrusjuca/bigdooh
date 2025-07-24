@@ -4,44 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Outdoor</title>
-  <link rel="stylesheet" href="css/style.css"> <!-- Link para o arquivo CSS -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> <!-- Fonte Montserrat -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" /> <!-- AOS -->
-  <!-- CSS do Leaflet -->
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    @media (max-width: 1024px) {
-  .container {
-    width: 80%;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    width: 90%;
-    padding: 15px;
-  }
-  h1 {
-    font-size: 1.5em;
-  }
-  .info div {
-    font-size: 1em;
-  }
-  .buttondetalhes {
-    width: 100%;
-    text-align: center;
-  }
-  .map-container {
-    min-height: 300px; /* Ajuste de altura para melhor visualização */
-    
-  }
-  #map {
-    width: 100%;
-    height: 300px; /* Evita cortes no mapa */
-  }
-}
-
-
     body {
       font-family: 'Montserrat', sans-serif;
       background-color: #111116;
@@ -52,33 +19,40 @@
       flex-direction: column;
       padding: 20px;
     }
-.container {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-  min-width: 320px;
-  margin: auto;
-}
+    .container {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 900px;
+      min-width: 320px;
+      margin: auto;
+    }
+    .main-flex {
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      width: 100%;
+      justify-content: space-between;
+    }
     .header {
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
+      min-width: 220px;
+      max-width: 300px;
+      flex-shrink: 0;
     }
-    
-  .foto {
-    width: 100%;
-    max-height: 250px;
-    object-fit: contain;
-    display: none;
-    margin-bottom: 20px;
-    border-radius: 8px;
-  }
-
-
+    .foto {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      display: none; /* Mantém a foto invisível */
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
     .info {
       display: flex;
       flex-direction: column;
@@ -106,7 +80,6 @@
       padding: 6px 10px;
       background-color: #ff6f20;
       color: white;
-      position: inherit;
       border: none;
       border-radius: 15px;
       cursor: pointer;
@@ -125,41 +98,80 @@
       color: #333;
     }
     .map-container {
-      
+      flex: 1;
+      min-width: 0;
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: relative;
       min-height: 377px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    /* Substituímos o iframe por um div para o Leaflet */
     #map {
       width: 100%;
       height: 400px;
       border: 0;
     }
     .overlay {
-      position: relative;
+      position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.95);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 10;
     }
     .overlay img {
-      width: 100%;
-      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .container {
         width: 90%;
       }
+      .main-flex {
+        gap: 16px;
+      }
+      .header {
+        min-width: 160px;
+        max-width: 220px;
+      }
+    }
+    @media (max-width: 768px) {
+      .container {
+        width: 98%;
+        padding: 10px;
+      }
+      .main-flex {
+        flex-direction: column;
+        gap: 0;
+      }
+      .header {
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 20px;
+      }
+      .map-container {
+        min-height: 300px;
+      }
+      #map {
+        height: 300px;
+      }
       h1 {
         font-size: 1.5em;
+      }
+      .info div {
+        font-size: 1em;
+      }
+      .buttondetalhes {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
@@ -179,37 +191,37 @@
         <li><a href="blog.html">MÍDIA DOOH</a></li>
         <li><a href="index.html#quem-somos">QUEM SOMOS</a></li>
         <li><a href="index.html#contact-section">FALA BIG!</a></li>
-    </ul>
+      </ul>
     </nav>
   </header>
   <div class="container">
-    <div class="header">
-      <img id="foto" class="foto" src="imgs/wesleeysafadao.png" alt="Foto do Outdoor"/> <!-- Foto à esquerda -->
-      <div class="info">
-        <h1 id="placa">Placa: </h1>
-        <div id="tipo">Tipo: </div>
-        <div id="endereco">Endereço: </div>
-        <div class="button-containerdetalhes">
-          <button class="buttondetalhes" id="show-photo-btn">Visualizar Foto</button>
-          <button class="buttondetalhes" id="latlong-btn">Mostrar Latitude e Longitude</button>
-          <button class="buttondetalhes" onclick="window.history.back();">←</button>
-        </div>
-        <div id="latlongDiv">
-          <div>Latitude: <span id="latitude"></span></div>
-          <div>Longitude: <span id="longitude"></span></div>
+    <div class="main-flex">
+      <div class="header">
+        <img id="foto" class="foto" src="imgs/wesleeysafadao.png" alt="Foto do Outdoor"/>
+        <div class="info">
+          <h1 id="placa">Placa: </h1>
+          <div id="tipo">Tipo: </div>
+          <div id="endereco">Endereço: </div>
+          <div class="button-containerdetalhes">
+            <button class="buttondetalhes" id="show-photo-btn">Visualizar Foto</button>
+            <button class="buttondetalhes" id="latlong-btn">Mostrar Latitude e Longitude</button>
+            <button class="buttondetalhes" onclick="window.history.back();">←</button>
+          </div>
+          <div id="latlongDiv">
+            <div>Latitude: <span id="latitude"></span></div>
+            <div>Longitude: <span id="longitude"></span></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="map-container">
-      <!-- Aqui usamos um div com id "map" para o Leaflet -->
-      <div id="map"></div>
-      <div class="overlay" id="overlay">
-        <img id="overlayFoto" src="" alt="Foto do Outdoor">
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="overlay" id="overlay">
+          <img id="overlayFoto" src="" alt="Foto do Outdoor">
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Script do Leaflet -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -224,7 +236,6 @@
           return response.json();
         })
         .then(data => {
-          // Atualiza as informações na página
           document.getElementById('placa').innerText += data.NUM_PLACA;
           document.getElementById('tipo').innerText += data.TIPO;
           document.getElementById('endereco').innerText += data.ENDERECO;
@@ -232,49 +243,40 @@
           const fotoElement = document.getElementById('foto');
           fotoElement.src = data.FOTO_URL;
 
-          console.log('Image source:', fotoElement.src); // Debugging line
-
           const lat = data.LATITUDE;
           const lng = data.LONGITUDE;
 
-          // Inicializa o mapa interativo com Leaflet centralizado nas coordenadas obtidas
           var map = L.map('map').setView([lat, lng], 14);
 
-          // Adiciona a camada de tiles do OpenStreetMap
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
           }).addTo(map);
 
-          // Adiciona um marcador com popup na localização
           L.marker([lat, lng]).addTo(map)
             .bindPopup(`<strong>Localização do Outdoor</strong><br>${data.ENDERECO}`)
             .openPopup();
 
-          // Lida com o botão para visualizar/ocultar a foto em sobreposição
           document.getElementById('show-photo-btn').addEventListener('click', function() {
             const overlay = document.getElementById('overlay');
             const overlayFoto = document.getElementById('overlayFoto');
 
             if (overlay.style.display === 'none' || overlay.style.display === '') {
-              overlayFoto.src = fotoElement.src; // Define a foto na sobreposição
+              overlayFoto.src = fotoElement.src;
               overlayFoto.onerror = function() {
-                console.error('Erro ao carregar a imagem:', fotoElement.src);
-                overlay.style.display = 'none'; // Esconde a sobreposição se a imagem não carregar
-                document.getElementById('map').style.display = 'block'; // Mostra o mapa novamente
-                this.innerText = 'Visualizar Foto';
+                overlay.style.display = 'none';
+                document.getElementById('map').style.display = 'block';
+                document.getElementById('show-photo-btn').innerText = 'Visualizar Foto';
               };
-
-              overlay.style.display = 'flex'; // Mostra a sobreposição
-              document.getElementById('map').style.display = 'none'; // Opcional: esconde o mapa
+              overlay.style.display = 'flex';
+              document.getElementById('map').style.display = 'none';
               this.innerText = 'Ocultar Foto';
             } else {
-              overlay.style.display = 'none'; // Esconde a sobreposição
-              document.getElementById('map').style.display = 'block'; // Mostra o mapa
+              overlay.style.display = 'none';
+              document.getElementById('map').style.display = 'block';
               this.innerText = 'Visualizar Foto';
             }
           });
 
-          // Lida com o botão para mostrar/ocultar a latitude e longitude
           document.getElementById('latlong-btn').addEventListener('click', function() {
             const latlongDiv = document.getElementById('latlongDiv');
             latlongDiv.style.display = latlongDiv.style.display === 'none' ? 'block' : 'none';
@@ -285,8 +287,8 @@
         .catch(error => console.error('Erro:', error));
     });
   </script>
-<a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
+  <a href="https://wa.me/8534918533" class="whatsapp-button" target="_blank" title="Fale Conosco no WhatsApp">
     <img src="imgs/zaporange-BG.png" alt="WhatsApp">
-</a>
+  </a>
 </body>
 </html>
