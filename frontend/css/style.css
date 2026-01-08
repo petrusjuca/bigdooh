@@ -60,6 +60,7 @@ header {
 
 /* Estilos de navegação */
 nav {
+    
     display: flex; /* Flexbox para alinhar itens */
     justify-content: center;
     align-items: center; /* Centraliza verticalmente */
@@ -67,15 +68,19 @@ nav {
 }
 
 .nav-list {
-
+    
 
     list-style: none; /* Remove marcadores da lista */
     display: flex; /* Exibe os itens em linha */
     padding: 0; /* Remove padding padrão */
     margin: 0; /* Remove margin padrão */
 }
-
+.nav-list a {
+  font-weight: 700;
+  color: #000;
+}
 .nav-list li {
+    
     letter-spacing: 3px; /* Espaçamento entre letras */
     margin-left: 32px; /* Espaço à esquerda dos itens */
 }
@@ -101,7 +106,8 @@ nav a::after {
 }
 
 nav a:hover {
-    color: var(--cor-secundaria); /* Muda a cor ao passar o mouse */
+     color: #ffffff;
+    /* Muda a cor ao passar o mouse */
     transform: scale(1.1); /* Aumenta o tamanho ao passar o mouse */
 }
 

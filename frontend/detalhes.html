@@ -87,6 +87,8 @@
       margin-bottom: 15px;
       transition: background-color 0.3s;
       width: auto;
+      text-decoration: none;
+      display: inline-block;
     }
     .buttondetalhes:hover {
       background-color: #e65c00;
@@ -206,12 +208,8 @@
           <div id="endereco">Endereço: </div>
           <div class="button-containerdetalhes">
             <button class="buttondetalhes" id="show-photo-btn">Visualizar Foto</button>
-            <button class="buttondetalhes" id="latlong-btn">Mostrar Latitude e Longitude</button>
+            <a id="latlongLink" class="buttondetalhes" href="#" target="_blank">Ver localização (Lat/Long)</a>
             <button class="buttondetalhes" onclick="window.history.back();">←</button>
-          </div>
-          <div id="latlongDiv">
-            <div>Latitude: <span id="latitude"></span></div>
-            <div>Longitude: <span id="longitude"></span></div>
           </div>
         </div>
       </div>
@@ -279,12 +277,15 @@
             }
           });
 
-          document.getElementById('latlong-btn').addEventListener('click', function() {
-            const latlongDiv = document.getElementById('latlongDiv');
-            latlongDiv.style.display = latlongDiv.style.display === 'none' ? 'block' : 'none';
-            document.getElementById('latitude').innerText = lat;
-            document.getElementById('longitude').innerText = lng;
-          });
+          // Set the Google Maps link dynamically using latitude and longitude
+          const latlongLink = document.getElementById('latlongLink');
+          if (lat !== null && lng !== null && lat !== '' && lng !== '') {
+            latlongLink.href = `https://www.google.com/maps?q=${lat},${lng}`;
+            latlongLink.target = '_blank';
+          } else {
+            // hide the link if coordinates are not available
+            latlongLink.style.display = 'none';
+          }
         })
         .catch(error => console.error('Erro:', error));
     });
