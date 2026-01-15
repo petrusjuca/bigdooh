@@ -131,6 +131,39 @@ nav a:hover::after {
     transition: 0.3s; /* Transição suave */
 }
 
+/* Logo dentro da navbar que aparece somente após o usuário rolar além da primeira tela */
+#navLogo {
+    position: absolute;
+    left: 20px;
+    top: 8px;
+    height: 40px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    pointer-events: none;
+    z-index: 200;
+}
+#navLogo.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Ajuste leve para a lista de navegação quando a logo aparece */
+header.scrolled .nav-list {
+    margin-left: 70px; /* cria espaço para a logo sem quebrar o layout */
+}
+
+/* Grande logo da primeira tela: esconder suavemente quando o usuário rolar */
+.logo-button {
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.logo-button.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
 /* Estilos responsivos */
 
 
