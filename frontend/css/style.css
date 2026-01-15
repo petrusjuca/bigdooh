@@ -45,17 +45,18 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
+    /* Gradiente mais claro: mantém o laranja da marca, mas clareia o fim */
+    background: linear-gradient(135deg, rgba(249, 90, 5, 0.98) 0%, rgba(243, 128, 74, 0.95) 100%);
     text-align: center;
     padding: 14px 0;
-    opacity: 0.95; /* Corrigido para 0.95 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0.98;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     z-index: 100; /* Garante que fique acima de outros elementos */
     position: fixed; /* Fixa o header no topo */
     top: 0; /* Posiciona na parte superior */
     left: 0; /* Alinha à esquerda */
     width: 100%; /* Largura total */
-
+    border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 /* Estilos de navegação */
@@ -76,8 +77,8 @@ nav {
     margin: 0; /* Remove margin padrão */
 }
 .nav-list a {
-  font-weight: 700;
-  color: #000;
+    font-weight: 700;
+    color: var(--cor-texto);
 }
 .nav-list li {
     
@@ -86,7 +87,7 @@ nav {
 }
 
 nav a {
-    color: var(--cor-branco); /* Cor do texto */
+    color: var(--cor-texto); /* Cor do texto (mais escuro em fundo claro) */
     text-decoration: none; /* Remove sublinhado */
     font-size: 1.2em; /* Tamanho da fonte */
     position: relative; /* Necessário para o pseudo-elemento */
@@ -125,7 +126,7 @@ nav a:hover::after {
 .mobile-menu div {
     width: 32px; /* Largura das linhas do menu */
     height: 2px; /* Altura das linhas do menu */
-    background: #fff; /* Cor das linhas do menu */
+    background: var(--cor-texto); /* Cor das linhas do menu para melhor contraste */
     margin: 8px; /* Espaçamento entre as linhas */
     transition: 0.3s; /* Transição suave */
 }
