@@ -49,7 +49,7 @@
       width: 100%;
       max-height: 250px;
       object-fit: contain;
-      display: none; /* Mantém a foto invisível */
+      display: none; /* Oculta a miniatura conforme solicitado */
       margin-bottom: 20px;
       border-radius: 8px;
     }
@@ -132,7 +132,35 @@
       max-width: 100%;
       max-height: 100%;
       border-radius: 8px;
+      transition: transform 0.25s ease, max-width 0.25s ease, max-height 0.25s ease;
+      cursor: zoom-in;
     }
+    .overlay img.enlarged {
+      max-width: calc(100vw - 40px);
+      max-height: calc(100vh - 40px);
+      transform: translateZ(0);
+      border-radius: 6px;
+      cursor: zoom-out;
+    }
+    .overlay .fs-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 20;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.15s ease;
+    }
+    .overlay .fs-btn:hover { background: rgba(0,0,0,0.8); }
     @media (max-width: 1024px) {
       .container {
         width: 90%;
@@ -217,6 +245,7 @@
       <div class="map-container">
         <div id="map"></div>
         <div class="overlay" id="overlay">
+          <button id="fs-btn" class="fs-btn" aria-label="Tela cheia">⤢</button>
           <img id="overlayFoto" src="" alt="Foto do Outdoor">
         </div>
       </div>
@@ -243,6 +272,21 @@
 
           const fotoElement = document.getElementById('foto');
           fotoElement.src = data.FOTO_URL;
+
+          // elementos da sobreposição (usados para zoom ao clicar)
+          const overlay = document.getElementById('overlay');
+          const overlayFoto = document.getElementById('overlayFoto');
+
+          // clicar na imagem exibida alterna o estado ampliado
+          overlayFoto.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('enlarged');
+            if (this.classList.contains('enlarged')) {
+              overlay.style.background = 'rgba(0,0,0,0.95)';
+            } else {
+              overlay.style.background = 'rgba(255,255,255,0.95)';
+            }
+          });
 
           const lat = data.LATITUDE;
           const lng = data.LONGITUDE;
@@ -277,6 +321,42 @@
               this.innerText = 'Visualizar Foto';
             }
           });
+
+          // A miniatura foi removida; a visualização é acionada apenas pelo botão
+
+          // Fullscreen button behavior
+          const fsBtn = document.getElementById('fs-btn');
+          if (fsBtn) {
+            fsBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              const overlayEl = document.getElementById('overlay');
+              if (!document.fullscreenElement) {
+                if (overlayEl.requestFullscreen) {
+                  overlayEl.requestFullscreen();
+                } else if (overlayEl.webkitRequestFullscreen) {
+                  overlayEl.webkitRequestFullscreen();
+                } else if (overlayEl.msRequestFullscreen) {
+                  overlayEl.msRequestFullscreen();
+                }
+              } else {
+                if (document.exitFullscreen) {
+                  document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                  document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                  document.msExitFullscreen();
+                }
+              }
+            });
+
+            document.addEventListener('fullscreenchange', function() {
+              if (document.fullscreenElement) {
+                fsBtn.innerText = '⤡';
+              } else {
+                fsBtn.innerText = '⤢';
+              }
+            });
+          }
 
           // Set the Google Maps link dynamically using latitude and longitude
           const latlongLink = document.getElementById('latlongLink');
