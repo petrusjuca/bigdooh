@@ -1375,7 +1375,12 @@ textarea {
 
     .nav-list li {
         margin-left: 0;
-        opacity: 0;
+        opacity: 1;
+    }
+
+    .nav-list li a {
+        color: #ffffff;
+        font-weight: 700;
     }
 
     .mobile-menu {
