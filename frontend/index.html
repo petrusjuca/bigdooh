@@ -102,6 +102,20 @@
             }
         }
 
+        .form-status {
+            margin-top: 14px;
+            font-size: 0.95rem;
+            min-height: 1.3em;
+        }
+
+        .form-status.success {
+            color: #b7f5b1;
+        }
+
+        .form-status.error {
+            color: #ffb3b3;
+        }
+
         /* Estilos para a imagem de fundo com efeito parallax */
         .parallax1 {
             background-image: url('imgs/parallaxoutdoor.png'); /* Substitua pelo caminho da sua imagem */
@@ -419,7 +433,7 @@ Atuamos conectando marcas e pessoas por meio de soluções inteligentes que unem
                 </div> 
             </div>  
 
-            <form action="enviar_contato.php" method="POST">
+            <form id="contact-form" class="contact-form" action="https://formsubmit.co/sac@bigdooh.com.br" method="POST" novalidate>
                 <div class="form-group">
                     <label for="nome">Nome:</label>
                     <input type="text" id="nome" name="nome" required>
@@ -432,7 +446,10 @@ Atuamos conectando marcas e pessoas por meio de soluções inteligentes que unem
                     <label for="mensagem">Mensagem:</label>
                     <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
                 </div>
+                <input type="hidden" name="_subject" value="Novo contato via site BigDOOH">
+                <input type="hidden" name="_captcha" value="false">
                 <button type="submit" class="button-enviar">Enviar</button>
+                <div id="contact-status" class="form-status" aria-live="polite"></div>
             </form>
         </div>
         

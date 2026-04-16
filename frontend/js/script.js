@@ -104,6 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicia o efeito de digitação
     type();
     //typingElement.style.borderRight = '2px solid white'; // Adiciona a borda ao final
+
+    const contactForm = document.getElementById('contact-form');
+
+    contactForm.addEventListener('submit', () => {
+        // FormSubmit fará o envio diretamente para o email configurado.
+        // A validação HTML de required já será executada pelo navegador.
+    });
 });
 
 class MobileNavbar {
