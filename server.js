@@ -10,7 +10,8 @@ const XLSX = require('xlsx');
 const app = express();
 const port = process.env.PORT || process.env.Port || 3001;
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'bigdooh2026';
+const cleanEnv = (v) => (typeof v === 'string' ? v.trim() : v);
+const ADMIN_PASSWORD = cleanEnv(process.env.ADMIN_PASSWORD) || 'bigdooh2026';
 const IMGS_OUTDOOR_DIR = path.join(__dirname, 'imgs-outdoor');
 
 app.use(cors());
@@ -29,16 +30,16 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 
-const outdoorDbUrl = process.env.TURSO_DATABASE_URL || `file:${path.join(__dirname, 'backend/database/banco.db')}`;
+const outdoorDbUrl = cleanEnv(process.env.TURSO_DATABASE_URL) || `file:${path.join(__dirname, 'backend/database/banco.db')}`;
 const isRemoteOutdoors = outdoorDbUrl.startsWith('libsql:') || outdoorDbUrl.startsWith('https:');
 
 const outdoorDb = createClient({
     url: outdoorDbUrl,
-    authToken: isRemoteOutdoors ? process.env.TURSO_AUTH_TOKEN : undefined,
+    authToken: isRemoteOutdoors ? cleanEnv(process.env.TURSO_AUTH_TOKEN) : undefined,
 });
 
 const bigsemanasDb = createClient({
-    url: process.env.BIGSEMANAS_DATABASE_URL || `file:${path.join(__dirname, 'backend/database/semanasbanco.db')}`,
+    url: cleanEnv(process.env.BIGSEMANAS_DATABASE_URL) || `file:${path.join(__dirname, 'backend/database/semanasbanco.db')}`,
 });
 
 async function ensureOutdoorsSchema() {
