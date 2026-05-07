@@ -3,21 +3,20 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
+const { createClient } = require('@libsql/client');
 const multer = require('multer');
 const XLSX = require('xlsx');
 
 const app = express();
-const port = process.env.Port || 3001;
+const port = process.env.PORT || process.env.Port || 3001;
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'bigdooh2026';
 const IMGS_OUTDOOR_DIR = path.join(__dirname, 'imgs-outdoor');
 
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
-
 app.use(express.static(path.join(__dirname, 'frontend')));
-app.use(express.static(path.join(__dirname, 'imgs-outdoor'))); // Serve images from imgs-outdoor
+app.use(express.static(IMGS_OUTDOOR_DIR));
 
 const uploadPhoto = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const uploadXlsx = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
@@ -30,60 +29,88 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 
-// Connect to the outdoor database using a relative path
-const outdoorDbPath = process.env.OUTDOOR_DB_PATH || './backend/database/banco.db';
-const bigsemanasDbPath = process.env.BIGSEMANAS_DB_PATH || './backend/database/semanasbanco.db';
+const outdoorDbUrl = process.env.TURSO_DATABASE_URL || `file:${path.join(__dirname, 'backend/database/banco.db')}`;
+const isRemoteOutdoors = outdoorDbUrl.startsWith('libsql:') || outdoorDbUrl.startsWith('https:');
 
-const outdoorDb = new sqlite3.Database(outdoorDbPath, (err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados outdoors:', err.message);
-    } else {
-        console.log('Conectado ao banco de dados outdoors');
+const outdoorDb = createClient({
+    url: outdoorDbUrl,
+    authToken: isRemoteOutdoors ? process.env.TURSO_AUTH_TOKEN : undefined,
+});
+
+const bigsemanasDb = createClient({
+    url: process.env.BIGSEMANAS_DATABASE_URL || `file:${path.join(__dirname, 'backend/database/semanasbanco.db')}`,
+});
+
+async function ensureOutdoorsSchema() {
+    await outdoorDb.execute(`CREATE TABLE IF NOT EXISTS outdoorsinfo (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        NUM_PLACA TEXT,
+        TIPO TEXT,
+        ENDERECO TEXT,
+        SENTIDO TEXT,
+        LATITUDE TEXT,
+        LONGITUDE TEXT,
+        LINK TEXT,
+        GABARITO TEXT,
+        FOTO_URL TEXT
+    )`);
+    if (!isRemoteOutdoors) return;
+    const r = await outdoorDb.execute('SELECT COUNT(*) AS c FROM outdoorsinfo');
+    const count = Number(r.rows[0].c);
+    if (count > 0) {
+        console.log(`Turso já tem ${count} placas — pulando seed.`);
+        return;
+    }
+    const localPath = path.join(__dirname, 'backend/database/banco.db');
+    if (!fs.existsSync(localPath)) {
+        console.log('Turso vazio mas não achei banco local pra semear.');
+        return;
+    }
+    console.log('Turso vazio — semeando a partir de backend/database/banco.db…');
+    const local = createClient({ url: `file:${localPath}` });
+    const all = await local.execute('SELECT NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL FROM outdoorsinfo');
+    for (const row of all.rows) {
+        await outdoorDb.execute({
+            sql: `INSERT INTO outdoorsinfo (NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [row.NUM_PLACA, row.TIPO, row.ENDERECO, row.SENTIDO, row.LATITUDE, row.LONGITUDE, row.LINK, row.GABARITO, row.FOTO_URL],
+        });
+    }
+    console.log(`Semeadas ${all.rows.length} placas no Turso.`);
+    local.close();
+}
+
+ensureOutdoorsSchema()
+    .then(() => console.log('Banco outdoors pronto.'))
+    .catch((e) => console.error('Erro init outdoors:', e));
+
+// === Public outdoors API ===
+app.get('/api/outdoors', async (req, res) => {
+    try {
+        const r = await outdoorDb.execute('SELECT * FROM outdoorsinfo');
+        res.json(r.rows);
+    } catch (e) {
+        console.error('Erro ao buscar outdoors:', e.message);
+        res.status(500).json({ error: e.message });
     }
 });
 
-const bigsemanasDb = new sqlite3.Database(bigsemanasDbPath, (err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados semanasbanco:', err.message);
-    } else {
-        console.log('Conectado ao banco de dados semanasbanco');
+app.get('/api/outdoors/:id', async (req, res) => {
+    try {
+        const r = await outdoorDb.execute({ sql: 'SELECT * FROM outdoorsinfo WHERE id = ?', args: [req.params.id] });
+        if (!r.rows[0]) return res.status(404).json({ error: 'Outdoor não encontrado' });
+        res.json(r.rows[0]);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
     }
 });
 
-// Routes for outdoors
-app.get('/api/outdoors', (req, res) => {
-    outdoorDb.all('SELECT * FROM outdoorsinfo', [], (err, rows) => {
-        if (err) {
-            console.error('Erro ao buscar outdoors:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-        res.json(rows);
-    });
-});
-
-app.get('/api/outdoors/:id', (req, res) => {
-    const id = req.params.id;
-    outdoorDb.get('SELECT * FROM outdoorsinfo WHERE id = ?', [id], (err, row) => {
-        if (err) {
-            console.error('Erro ao buscar outdoor:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-        if (!row) {
-            return res.status(404).json({ error: 'Outdoor não encontrado' });
-        }
-        res.json(row);
-    });
-});
-
-// Routes for bigsemanas
-app.get('/api/bigsemanas', (req, res) => {
-    bigsemanasDb.all('SELECT * FROM bigsemanas', [], (err, rows) => {
-        if (err) {
-            console.error('Erro ao buscar bigsemanas:', err.message);
-            return res.status(500).json({ error: err.message });
-        }
-        res.json(rows);
-    });
+app.get('/api/bigsemanas', async (req, res) => {
+    try {
+        const r = await bigsemanasDb.execute('SELECT * FROM bigsemanas');
+        res.json(r.rows);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 // === Admin (placas) ===
@@ -92,49 +119,49 @@ app.post('/api/admin/login', (req, res) => {
     res.status(401).json({ error: 'Senha incorreta' });
 });
 
-app.get('/api/admin/outdoors', requireAdmin, (req, res) => {
-    outdoorDb.all('SELECT * FROM outdoorsinfo ORDER BY CAST(NUM_PLACA AS INTEGER), NUM_PLACA', [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
+app.get('/api/admin/outdoors', requireAdmin, async (req, res) => {
+    try {
+        const r = await outdoorDb.execute('SELECT * FROM outdoorsinfo ORDER BY CAST(NUM_PLACA AS INTEGER), NUM_PLACA');
+        res.json(r.rows);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 const FIELDS = ['NUM_PLACA', 'TIPO', 'ENDERECO', 'SENTIDO', 'LATITUDE', 'LONGITUDE', 'LINK', 'GABARITO', 'FOTO_URL'];
 const pick = (body) => FIELDS.reduce((acc, f) => { acc[f] = body[f] != null ? String(body[f]) : ''; return acc; }, {});
 
-app.post('/api/admin/outdoors', requireAdmin, (req, res) => {
+app.post('/api/admin/outdoors', requireAdmin, async (req, res) => {
     const data = pick(req.body || {});
     if (!data.NUM_PLACA) return res.status(400).json({ error: 'NUM_PLACA é obrigatório' });
     if (!data.TIPO) return res.status(400).json({ error: 'TIPO é obrigatório' });
-    outdoorDb.get('SELECT id FROM outdoorsinfo WHERE NUM_PLACA = ?', [data.NUM_PLACA], (err, row) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (row) {
-            outdoorDb.run(
-                `UPDATE outdoorsinfo SET TIPO=?, ENDERECO=?, SENTIDO=?, LATITUDE=?, LONGITUDE=?, LINK=?, GABARITO=?, FOTO_URL=? WHERE id=?`,
-                [data.TIPO, data.ENDERECO, data.SENTIDO, data.LATITUDE, data.LONGITUDE, data.LINK, data.GABARITO, data.FOTO_URL, row.id],
-                function (e) {
-                    if (e) return res.status(500).json({ error: e.message });
-                    res.json({ ok: true, id: row.id, action: 'updated' });
-                }
-            );
-        } else {
-            outdoorDb.run(
-                `INSERT INTO outdoorsinfo (NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                FIELDS.map((f) => data[f]),
-                function (e) {
-                    if (e) return res.status(500).json({ error: e.message });
-                    res.json({ ok: true, id: this.lastID, action: 'created' });
-                }
-            );
+    try {
+        const existing = await outdoorDb.execute({ sql: 'SELECT id FROM outdoorsinfo WHERE NUM_PLACA = ?', args: [data.NUM_PLACA] });
+        if (existing.rows[0]) {
+            const id = existing.rows[0].id;
+            await outdoorDb.execute({
+                sql: `UPDATE outdoorsinfo SET TIPO=?, ENDERECO=?, SENTIDO=?, LATITUDE=?, LONGITUDE=?, LINK=?, GABARITO=?, FOTO_URL=? WHERE id=?`,
+                args: [data.TIPO, data.ENDERECO, data.SENTIDO, data.LATITUDE, data.LONGITUDE, data.LINK, data.GABARITO, data.FOTO_URL, id],
+            });
+            return res.json({ ok: true, id: Number(id), action: 'updated' });
         }
-    });
+        const ins = await outdoorDb.execute({
+            sql: `INSERT INTO outdoorsinfo (NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: FIELDS.map((f) => data[f]),
+        });
+        res.json({ ok: true, id: Number(ins.lastInsertRowid), action: 'created' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
-app.delete('/api/admin/outdoors/:id', requireAdmin, (req, res) => {
-    outdoorDb.run('DELETE FROM outdoorsinfo WHERE id = ?', [req.params.id], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ ok: true, deleted: this.changes });
-    });
+app.delete('/api/admin/outdoors/:id', requireAdmin, async (req, res) => {
+    try {
+        const r = await outdoorDb.execute({ sql: 'DELETE FROM outdoorsinfo WHERE id = ?', args: [req.params.id] });
+        res.json({ ok: true, deleted: r.rowsAffected });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 app.post('/api/admin/photo', requireAdmin, uploadPhoto.single('photo'), (req, res) => {
@@ -150,13 +177,12 @@ app.post('/api/admin/photo', requireAdmin, uploadPhoto.single('photo'), (req, re
     } catch (e) {
         return res.status(500).json({ error: 'Erro ao salvar imagem: ' + e.message });
     }
-    outdoorDb.run('UPDATE outdoorsinfo SET FOTO_URL = ? WHERE NUM_PLACA = ?', [filename, numPlaca], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ ok: true, foto_url: filename, updated: this.changes });
-    });
+    outdoorDb.execute({ sql: 'UPDATE outdoorsinfo SET FOTO_URL = ? WHERE NUM_PLACA = ?', args: [filename, numPlaca] })
+        .then((r) => res.json({ ok: true, foto_url: filename, updated: r.rowsAffected, ephemeral: isRemoteOutdoors }))
+        .catch((e) => res.status(500).json({ error: e.message }));
 });
 
-app.post('/api/admin/import-xlsx', requireAdmin, uploadXlsx.single('xlsx'), (req, res) => {
+app.post('/api/admin/import-xlsx', requireAdmin, uploadXlsx.single('xlsx'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Arquivo xlsx não enviado' });
     let wb;
     try { wb = XLSX.read(req.file.buffer, { type: 'buffer' }); }
@@ -198,9 +224,9 @@ app.post('/api/admin/import-xlsx', requireAdmin, uploadXlsx.single('xlsx'), (req
         }
     }
 
-    outdoorDb.all('SELECT id, NUM_PLACA, FOTO_URL, LINK, GABARITO FROM outdoorsinfo', [], (err, existingRows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        const existing = new Map(existingRows.map((r) => [r.NUM_PLACA, r]));
+    try {
+        const existingRes = await outdoorDb.execute('SELECT id, NUM_PLACA, FOTO_URL, LINK, GABARITO FROM outdoorsinfo');
+        const existing = new Map(existingRes.rows.map((r) => [r.NUM_PLACA, r]));
         const newKeys = new Set(records.keys());
         const photoFiles = (() => { try { return new Set(fs.readdirSync(IMGS_OUTDOOR_DIR)); } catch { return new Set(); } })();
         const findPhoto = (num, tipo) => {
@@ -212,61 +238,73 @@ app.post('/api/admin/import-xlsx', requireAdmin, uploadXlsx.single('xlsx'), (req
             return cands.find((c) => photoFiles.has(c)) || null;
         };
 
-        outdoorDb.serialize(() => {
-            outdoorDb.run('BEGIN');
-            const stmtUpd = outdoorDb.prepare(`UPDATE outdoorsinfo SET TIPO=?, ENDERECO=?, SENTIDO=?, LATITUDE=?, LONGITUDE=?, LINK=?, GABARITO=?, FOTO_URL=? WHERE id=?`);
-            const stmtIns = outdoorDb.prepare(`INSERT INTO outdoorsinfo (NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-            const stmtDel = outdoorDb.prepare('DELETE FROM outdoorsinfo WHERE id = ?');
-            let added = 0, updated = 0, removed = 0;
-            for (const [num, rec] of records) {
-                const ex = existing.get(num);
-                if (ex) {
-                    const foto = ex.FOTO_URL || findPhoto(num, rec.TIPO);
-                    const link = rec.LINK || ex.LINK || '';
-                    const gabarito = rec.GABARITO || ex.GABARITO || '';
-                    stmtUpd.run([rec.TIPO, rec.ENDERECO, rec.SENTIDO, rec.LATITUDE, rec.LONGITUDE, link, gabarito, foto, ex.id]);
-                    updated++;
-                } else {
-                    const foto = findPhoto(num, rec.TIPO);
-                    stmtIns.run([rec.NUM_PLACA, rec.TIPO, rec.ENDERECO, rec.SENTIDO, rec.LATITUDE, rec.LONGITUDE, rec.LINK, rec.GABARITO, foto]);
-                    added++;
-                }
+        let added = 0, updated = 0, removed = 0;
+        const batch = [];
+        for (const [num, rec] of records) {
+            const ex = existing.get(num);
+            if (ex) {
+                const foto = ex.FOTO_URL || findPhoto(num, rec.TIPO);
+                const link = rec.LINK || ex.LINK || '';
+                const gabarito = rec.GABARITO || ex.GABARITO || '';
+                batch.push({
+                    sql: `UPDATE outdoorsinfo SET TIPO=?, ENDERECO=?, SENTIDO=?, LATITUDE=?, LONGITUDE=?, LINK=?, GABARITO=?, FOTO_URL=? WHERE id=?`,
+                    args: [rec.TIPO, rec.ENDERECO, rec.SENTIDO, rec.LATITUDE, rec.LONGITUDE, link, gabarito, foto, ex.id],
+                });
+                updated++;
+            } else {
+                const foto = findPhoto(num, rec.TIPO);
+                batch.push({
+                    sql: `INSERT INTO outdoorsinfo (NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                    args: [rec.NUM_PLACA, rec.TIPO, rec.ENDERECO, rec.SENTIDO, rec.LATITUDE, rec.LONGITUDE, rec.LINK, rec.GABARITO, foto],
+                });
+                added++;
             }
-            for (const [num, ex] of existing) {
-                if (!newKeys.has(num)) { stmtDel.run([ex.id]); removed++; }
+        }
+        for (const [num, ex] of existing) {
+            if (!newKeys.has(num)) {
+                batch.push({ sql: 'DELETE FROM outdoorsinfo WHERE id = ?', args: [ex.id] });
+                removed++;
             }
-            stmtUpd.finalize();
-            stmtIns.finalize();
-            stmtDel.finalize();
-            outdoorDb.run('COMMIT', (e) => {
-                if (e) return res.status(500).json({ error: e.message });
-                res.json({ ok: true, added, updated, removed, total: records.size });
-            });
-        });
-    });
+        }
+        await outdoorDb.batch(batch, 'write');
+        res.json({ ok: true, added, updated, removed, total: records.size });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
-app.get('/api/admin/export-xlsx', requireAdmin, (req, res) => {
-    outdoorDb.all('SELECT NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL FROM outdoorsinfo ORDER BY CAST(NUM_PLACA AS INTEGER), NUM_PLACA', [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+app.get('/api/admin/export-xlsx', requireAdmin, async (req, res) => {
+    try {
+        const r = await outdoorDb.execute('SELECT NUM_PLACA, TIPO, ENDERECO, SENTIDO, LATITUDE, LONGITUDE, LINK, GABARITO, FOTO_URL FROM outdoorsinfo ORDER BY CAST(NUM_PLACA AS INTEGER), NUM_PLACA');
+        const rows = r.rows;
         const groups = { 'PADRÃO': [], 'FRONT': [], 'LEDS': [], 'RODOVIARIO': [] };
-        for (const r of rows) {
-            const t = (r.TIPO || '').toUpperCase();
-            if (t === 'PADRÃO' || t === 'PADRAO') groups['PADRÃO'].push(r);
-            else if (t.includes('LED')) groups['LEDS'].push(r);
-            else if (t.includes('RODOVIARIO') || t.includes('RODOVIÁRIO')) groups['RODOVIARIO'].push(r);
-            else groups['FRONT'].push(r);
+        for (const row of rows) {
+            const t = String(row.TIPO || '').toUpperCase();
+            if (t === 'PADRÃO' || t === 'PADRAO') groups['PADRÃO'].push(row);
+            else if (t.includes('LED')) groups['LEDS'].push(row);
+            else if (t.includes('RODOVIARIO') || t.includes('RODOVIÁRIO')) groups['RODOVIARIO'].push(row);
+            else groups['FRONT'].push(row);
         }
         const wb = XLSX.utils.book_new();
         for (const [name, list] of Object.entries(groups)) {
             const header = ['Nº PLACA', 'TIPO', 'ENDEREÇO', 'SENTIDO', 'LONGITUDE', 'LATITUDE', 'LINK', 'GABARITO', 'FOTO_URL'];
-            const data = [header, ...list.map((r) => [r.NUM_PLACA, r.TIPO, r.ENDERECO, r.SENTIDO, r.LATITUDE, r.LONGITUDE, r.LINK, r.GABARITO, r.FOTO_URL])];
+            const data = [header, ...list.map((row) => [row.NUM_PLACA, row.TIPO, row.ENDERECO, row.SENTIDO, row.LATITUDE, row.LONGITUDE, row.LINK, row.GABARITO, row.FOTO_URL])];
             XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), name);
         }
         const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
         res.setHeader('Content-Disposition', 'attachment; filename="placas-bigdooh.xlsx"');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.send(buf);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+app.get('/api/admin/status', requireAdmin, (req, res) => {
+    res.json({
+        outdoorsBackend: isRemoteOutdoors ? 'turso' : 'local-file',
+        photoStorage: 'local-disk',
+        photoPersistent: !!process.env.RENDER_DISK_MOUNT_PATH || process.env.NODE_ENV === 'development',
     });
 });
 
@@ -275,7 +313,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'localizacoes.html'));
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Outdoors backend: ${isRemoteOutdoors ? 'Turso (remote)' : 'arquivo local'}`);
 });

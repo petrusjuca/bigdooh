@@ -67,6 +67,7 @@
     <div class="hint">
       <b>Como usar:</b> clique em qualquer célula para editar, e clique em <b>Salvar</b> na linha. Use <b>+ Nova placa</b> para adicionar. Para trocar a foto de uma placa, clique em <b>"Trocar foto"</b> abaixo da imagem.<br>
       Para atualizar tudo de uma vez a partir de uma planilha (.xlsx), use <b>Importar planilha</b>. As fotos já cadastradas são preservadas.
+      <div id="statusBar" style="margin-top:8px;font-size:11px;color:#777"></div>
     </div>
     <div class="toolbar">
       <input id="search" type="text" placeholder="Buscar por nº, tipo ou endereço..." oninput="render()" />
@@ -154,6 +155,14 @@ async function load() {
   try {
     placas = await api('/api/admin/outdoors');
     render();
+    try {
+      const s = await api('/api/admin/status');
+      const bar = document.getElementById('statusBar');
+      const dbOk = s.outdoorsBackend === 'turso';
+      const photoOk = !!s.photoPersistent;
+      bar.innerHTML = `Banco de dados: <b style="color:${dbOk ? '#22c55e' : '#ff6f20'}">${dbOk ? 'Turso (mudanças salvam de verdade)' : 'arquivo local (mudanças voltam ao normal quando o servidor reiniciar — peça pro Petrus configurar o Turso)'}</b>` +
+        ` &nbsp;·&nbsp; Fotos: <b style="color:${photoOk ? '#22c55e' : '#ff6f20'}">${photoOk ? 'persistentes' : 'temporárias na hospedagem (envie pro Petrus quando trocar)'}</b>`;
+    } catch {}
   } catch (e) { toast(e.message, 'error'); }
 }
 
