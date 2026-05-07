@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Placas - BIGDOOH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; margin: 0; background: #111116; color: #fff; }
+    header { background: #1a1a22; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #ff6f20; }
+    header h1 { margin: 0; font-size: 20px; color: #ff6f20; }
+    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    button, .btn { font-family: inherit; background: #ff6f20; color: #fff; border: 0; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    button:hover, .btn:hover { background: #e65c00; }
+    button.secondary { background: #444; }
+    button.secondary:hover { background: #555; }
+    button.danger { background: #b00020; }
+    button.danger:hover { background: #d11a32; }
+    main { padding: 16px 24px 80px; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    .toolbar input[type=text] { flex: 1; min-width: 220px; padding: 10px 12px; border-radius: 6px; border: 1px solid #333; background: #1a1a22; color: #fff; font-size: 14px; }
+    .summary { color: #aaa; font-size: 13px; margin-left: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #1a1a22; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid #2a2a33; vertical-align: top; text-align: left; font-size: 13px; }
+    th { background: #ff6f20; color: #fff; font-weight: 600; position: sticky; top: 0; z-index: 5; }
+    tr:hover td { background: #22222b; }
+    td input, td select, td textarea { width: 100%; background: transparent; border: 1px solid transparent; color: #fff; padding: 6px; font-family: inherit; font-size: 13px; border-radius: 4px; resize: vertical; }
+    td input:focus, td select:focus, td textarea:focus { outline: none; border-color: #ff6f20; background: #2a2a33; }
+    td.actions { white-space: nowrap; }
+    td.actions button { padding: 5px 8px; font-size: 12px; margin-right: 4px; }
+    td .thumb { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; background: #333; display: block; margin-bottom: 4px; }
+    td label.upload { color: #ff6f20; font-size: 11px; cursor: pointer; text-decoration: underline; }
+    td label.upload input { display: none; }
+    .login-card { max-width: 380px; margin: 80px auto; background: #1a1a22; padding: 28px; border-radius: 10px; border: 1px solid #2a2a33; }
+    .login-card h2 { color: #ff6f20; margin-top: 0; }
+    .login-card input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #333; background: #111116; color: #fff; font-size: 14px; }
+    .login-card button { width: 100%; padding: 12px; font-weight: 600; }
+    #toast { position: fixed; bottom: 20px; right: 20px; background: #1a1a22; color: #fff; padding: 12px 18px; border-radius: 6px; border-left: 4px solid #ff6f20; box-shadow: 0 4px 16px rgba(0,0,0,0.4); display: none; max-width: 360px; }
+    #toast.error { border-left-color: #b00020; }
+    #toast.ok { border-left-color: #22c55e; }
+    .hint { font-size: 12px; color: #999; margin-bottom: 16px; line-height: 1.5; background: #1a1a22; padding: 12px; border-radius: 6px; border-left: 3px solid #ff6f20; }
+    @media (max-width: 768px) {
+      th:nth-child(7), td:nth-child(7), th:nth-child(8), td:nth-child(8) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="login" class="login-card">
+  <h2>Admin · BIGDOOH</h2>
+  <p style="color:#aaa;font-size:13px">Entre com a senha para gerenciar as placas.</p>
+  <input id="pw" type="password" placeholder="Senha" autofocus />
+  <button onclick="login()">Entrar</button>
+  <div id="loginErr" style="color:#ff6f20;font-size:12px;margin-top:8px;"></div>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <h1>BIGDOOH · Gerenciar Placas</h1>
+    <div class="top-actions">
+      <a href="localizacoes.html" class="btn secondary" style="text-decoration:none">Ver site</a>
+      <button class="secondary" onclick="logout()">Sair</button>
+    </div>
+  </header>
+  <main>
+    <div class="hint">
+      <b>Como usar:</b> clique em qualquer célula para editar, e clique em <b>Salvar</b> na linha. Use <b>+ Nova placa</b> para adicionar. Para trocar a foto de uma placa, clique em <b>"Trocar foto"</b> abaixo da imagem.<br>
+      Para atualizar tudo de uma vez a partir de uma planilha (.xlsx), use <b>Importar planilha</b>. As fotos já cadastradas são preservadas.
+    </div>
+    <div class="toolbar">
+      <input id="search" type="text" placeholder="Buscar por nº, tipo ou endereço..." oninput="render()" />
+      <button onclick="addRow()">+ Nova placa</button>
+      <label class="btn secondary" style="cursor:pointer;margin:0">
+        Importar planilha
+        <input id="xlsxInput" type="file" accept=".xlsx,.xls" style="display:none" onchange="importXlsx(this)" />
+      </label>
+      <button class="secondary" onclick="exportXlsx()">Baixar planilha</button>
+      <span class="summary" id="summary"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nº</th>
+          <th>Tipo</th>
+          <th>Endereço</th>
+          <th>Sentido</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Link</th>
+          <th>Gabarito</th>
+          <th>Foto</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const TIPOS = ['PADRÃO', 'FRONT LIGHT', 'MEGA FRONT', 'PAINEL LED', 'PAINEL RODOVIARIO'];
+let pass = localStorage.getItem('bigdooh_admin_pass') || '';
+let placas = [];
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type || '';
+  t.style.display = 'block';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { t.style.display = 'none'; }, 3500);
+}
+
+async function api(path, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({ 'x-admin-pass': pass }, opts.headers || {});
+  const r = await fetch(path, opts);
+  if (r.status === 401) { logout(); throw new Error('Não autenticado'); }
+  if (!r.ok) {
+    let e;
+    try { e = await r.json(); } catch { e = { error: r.statusText }; }
+    throw new Error(e.error || 'Erro');
+  }
+  const ct = r.headers.get('content-type') || '';
+  return ct.includes('json') ? r.json() : r.blob();
+}
+
+async function login() {
+  const v = document.getElementById('pw').value;
+  try {
+    const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: v }) });
+    if (!r.ok) throw new Error('Senha incorreta');
+    pass = v;
+    localStorage.setItem('bigdooh_admin_pass', pass);
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    await load();
+  } catch (e) {
+    document.getElementById('loginErr').textContent = e.message;
+  }
+}
+
+function logout() {
+  pass = '';
+  localStorage.removeItem('bigdooh_admin_pass');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login').style.display = 'block';
+}
+
+async function load() {
+  try {
+    placas = await api('/api/admin/outdoors');
+    render();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function escapeAttr(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function rowHtml(p, isNew) {
+  const id = isNew ? '__new' : p.id;
+  const tipoOptions = TIPOS.map((t) => `<option ${t === p.TIPO ? 'selected' : ''}>${t}</option>`).join('');
+  const photoSrc = p.FOTO_URL ? `/${encodeURIComponent(p.FOTO_URL)}` : '';
+  return `
+    <tr data-id="${id}">
+      <td><input data-f="NUM_PLACA" value="${escapeAttr(p.NUM_PLACA)}" ${isNew ? '' : ''} /></td>
+      <td><select data-f="TIPO">${tipoOptions}</select></td>
+      <td><textarea data-f="ENDERECO" rows="2">${escapeHtml(p.ENDERECO)}</textarea></td>
+      <td><textarea data-f="SENTIDO" rows="2">${escapeHtml(p.SENTIDO)}</textarea></td>
+      <td><input data-f="LATITUDE" value="${escapeAttr(p.LATITUDE)}" /></td>
+      <td><input data-f="LONGITUDE" value="${escapeAttr(p.LONGITUDE)}" /></td>
+      <td><input data-f="LINK" value="${escapeAttr(p.LINK)}" /></td>
+      <td><input data-f="GABARITO" value="${escapeAttr(p.GABARITO)}" /></td>
+      <td>
+        ${photoSrc ? `<img class="thumb" src="${photoSrc}" onerror="this.style.display='none'"/>` : ''}
+        <label class="upload">Trocar foto<input type="file" accept="image/*" onchange="uploadPhoto(this, '${escapeAttr(p.NUM_PLACA)}')" /></label>
+      </td>
+      <td class="actions">
+        <button onclick="saveRow(this)">Salvar</button>
+        ${isNew ? '' : `<button class="danger" onclick="deleteRow(${p.id}, '${escapeAttr(p.NUM_PLACA)}')">Excluir</button>`}
+      </td>
+    </tr>`;
+}
+
+function render() {
+  const q = (document.getElementById('search').value || '').toLowerCase().trim();
+  const filtered = !q ? placas : placas.filter((p) =>
+    String(p.NUM_PLACA || '').toLowerCase().includes(q) ||
+    String(p.TIPO || '').toLowerCase().includes(q) ||
+    String(p.ENDERECO || '').toLowerCase().includes(q)
+  );
+  document.getElementById('tbody').innerHTML = filtered.map((p) => rowHtml(p, false)).join('');
+  document.getElementById('summary').textContent = `${filtered.length} de ${placas.length} placas`;
+}
+
+function addRow() {
+  const tr = document.createElement('tr');
+  tr.innerHTML = rowHtml({ NUM_PLACA: '', TIPO: 'PADRÃO', ENDERECO: '', SENTIDO: '', LATITUDE: '', LONGITUDE: '', LINK: '', GABARITO: '', FOTO_URL: '' }, true);
+  document.getElementById('tbody').prepend(tr.firstElementChild);
+  document.querySelector('tr[data-id="__new"] input[data-f="NUM_PLACA"]').focus();
+}
+
+async function saveRow(btn) {
+  const tr = btn.closest('tr');
+  const data = {};
+  tr.querySelectorAll('[data-f]').forEach((el) => { data[el.dataset.f] = el.value; });
+  if (!data.NUM_PLACA.trim()) return toast('Informe o número da placa', 'error');
+  try {
+    const r = await api('/api/admin/outdoors', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    toast(r.action === 'created' ? 'Placa criada' : 'Placa atualizada', 'ok');
+    await load();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteRow(id, num) {
+  if (!confirm(`Excluir a placa ${num}?`)) return;
+  try {
+    await api('/api/admin/outdoors/' + id, { method: 'DELETE' });
+    toast('Placa excluída', 'ok');
+    await load();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function uploadPhoto(input, numPlaca) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('photo', file);
+  fd.append('num_placa', numPlaca);
+  try {
+    await api('/api/admin/photo', { method: 'POST', body: fd });
+    toast('Foto atualizada', 'ok');
+    await load();
+  } catch (e) { toast(e.message, 'error'); }
+  input.value = '';
+}
+
+async function importXlsx(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (!confirm('Isso substitui o cadastro atual pelas placas da planilha (mantendo as fotos já cadastradas). Continuar?')) {
+    input.value = ''; return;
+  }
+  const fd = new FormData();
+  fd.append('xlsx', file);
+  try {
+    const r = await api('/api/admin/import-xlsx', { method: 'POST', body: fd });
+    toast(`Importado: +${r.added} novas, ${r.updated} atualizadas, -${r.removed} removidas`, 'ok');
+    await load();
+  } catch (e) { toast(e.message, 'error'); }
+  input.value = '';
+}
+
+async function exportXlsx() {
+  try {
+    const blob = await api('/api/admin/export-xlsx');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'placas-bigdooh.xlsx'; a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+if (pass) {
+  fetch('/api/admin/outdoors', { headers: { 'x-admin-pass': pass } }).then((r) => {
+    if (r.ok) { document.getElementById('login').style.display = 'none'; document.getElementById('app').style.display = 'block'; load(); }
+  });
+}
+document.getElementById('pw').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>
