@@ -105,6 +105,7 @@
 const TIPOS = ['PADRÃO', 'FRONT LIGHT', 'MEGA FRONT', 'PAINEL LED', 'PAINEL RODOVIARIO'];
 let pass = localStorage.getItem('bigdooh_admin_pass') || '';
 let placas = [];
+let statusInfo = null;
 
 function toast(msg, type) {
   const t = document.getElementById('toast');
@@ -156,12 +157,14 @@ async function load() {
     placas = await api('/api/admin/outdoors');
     render();
     try {
-      const s = await api('/api/admin/status');
+      statusInfo = await api('/api/admin/status');
       const bar = document.getElementById('statusBar');
-      const dbOk = s.outdoorsBackend === 'turso';
-      const photoOk = !!s.photoPersistent;
+      const dbOk = statusInfo.outdoorsBackend === 'turso';
+      const photoOk = !!statusInfo.photoPersistent;
+      const photoLabel = statusInfo.photoStorage === 'cloudinary' ? 'Cloudinary (persistentes)'
+        : (photoOk ? 'persistentes (dev local)' : 'temporárias na hospedagem (peça pro Petrus configurar o Cloudinary)');
       bar.innerHTML = `Banco de dados: <b style="color:${dbOk ? '#22c55e' : '#ff6f20'}">${dbOk ? 'Turso (mudanças salvam de verdade)' : 'arquivo local (mudanças voltam ao normal quando o servidor reiniciar — peça pro Petrus configurar o Turso)'}</b>` +
-        ` &nbsp;·&nbsp; Fotos: <b style="color:${photoOk ? '#22c55e' : '#ff6f20'}">${photoOk ? 'persistentes' : 'temporárias na hospedagem (envie pro Petrus quando trocar)'}</b>`;
+        ` &nbsp;·&nbsp; Fotos: <b style="color:${photoOk ? '#22c55e' : '#ff6f20'}">${photoLabel}</b>`;
     } catch {}
   } catch (e) { toast(e.message, 'error'); }
 }
@@ -169,10 +172,15 @@ async function load() {
 function escapeAttr(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
+function photoSrcOf(url) {
+  if (!url) return '';
+  return /^https?:\/\//i.test(url) ? url : `/${encodeURIComponent(url)}`;
+}
+
 function rowHtml(p, isNew) {
   const id = isNew ? '__new' : p.id;
   const tipoOptions = TIPOS.map((t) => `<option ${t === p.TIPO ? 'selected' : ''}>${t}</option>`).join('');
-  const photoSrc = p.FOTO_URL ? `/${encodeURIComponent(p.FOTO_URL)}` : '';
+  const photoSrc = photoSrcOf(p.FOTO_URL);
   return `
     <tr data-id="${id}">
       <td><input data-f="NUM_PLACA" value="${escapeAttr(p.NUM_PLACA)}" ${isNew ? '' : ''} /></td>
@@ -236,11 +244,33 @@ async function deleteRow(id, num) {
 async function uploadPhoto(input, numPlaca) {
   const file = input.files && input.files[0];
   if (!file) return;
-  const fd = new FormData();
-  fd.append('photo', file);
-  fd.append('num_placa', numPlaca);
   try {
-    await api('/api/admin/photo', { method: 'POST', body: fd });
+    const cloud = statusInfo && statusInfo.cloudinary;
+    if (cloud && cloud.cloud_name && cloud.upload_preset) {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', cloud.upload_preset);
+      fd.append('public_id', `bigdooh/${String(numPlaca).replace(/[^0-9A-Za-z_-]/g, '_')}`);
+      fd.append('overwrite', 'true');
+      const r = await fetch(`https://api.cloudinary.com/v1_1/${cloud.cloud_name}/image/upload`, { method: 'POST', body: fd });
+      if (!r.ok) {
+        let msg = 'Falha no upload pra Cloudinary';
+        try { msg = (await r.json()).error?.message || msg; } catch {}
+        throw new Error(msg);
+      }
+      const data = await r.json();
+      const url = data.secure_url;
+      await api('/api/admin/photo-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ num_placa: numPlaca, foto_url: url }),
+      });
+    } else {
+      const fd = new FormData();
+      fd.append('photo', file);
+      fd.append('num_placa', numPlaca);
+      await api('/api/admin/photo', { method: 'POST', body: fd });
+    }
     toast('Foto atualizada', 'ok');
     await load();
   } catch (e) { toast(e.message, 'error'); }
