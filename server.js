@@ -183,6 +183,23 @@ app.post('/api/admin/photo', requireAdmin, uploadPhoto.single('photo'), (req, re
         .catch((e) => res.status(500).json({ error: e.message }));
 });
 
+app.post('/api/admin/photo-url', requireAdmin, async (req, res) => {
+    const numPlaca = String((req.body || {}).num_placa || '').trim();
+    const fotoUrl = String((req.body || {}).foto_url || '').trim();
+    if (!numPlaca) return res.status(400).json({ error: 'num_placa é obrigatório' });
+    if (!fotoUrl) return res.status(400).json({ error: 'foto_url é obrigatório' });
+    if (!/^https?:\/\//i.test(fotoUrl)) return res.status(400).json({ error: 'foto_url deve ser uma URL https' });
+    try {
+        const r = await outdoorDb.execute({
+            sql: 'UPDATE outdoorsinfo SET FOTO_URL = ? WHERE NUM_PLACA = ?',
+            args: [fotoUrl, numPlaca],
+        });
+        res.json({ ok: true, foto_url: fotoUrl, updated: r.rowsAffected });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.post('/api/admin/import-xlsx', requireAdmin, uploadXlsx.single('xlsx'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Arquivo xlsx não enviado' });
     let wb;
@@ -302,10 +319,14 @@ app.get('/api/admin/export-xlsx', requireAdmin, async (req, res) => {
 });
 
 app.get('/api/admin/status', requireAdmin, (req, res) => {
+    const cloudName = cleanEnv(process.env.CLOUDINARY_CLOUD_NAME);
+    const preset = cleanEnv(process.env.CLOUDINARY_UPLOAD_PRESET);
+    const hasCloudinary = !!(cloudName && preset);
     res.json({
         outdoorsBackend: isRemoteOutdoors ? 'turso' : 'local-file',
-        photoStorage: 'local-disk',
-        photoPersistent: !!process.env.RENDER_DISK_MOUNT_PATH || process.env.NODE_ENV === 'development',
+        photoStorage: hasCloudinary ? 'cloudinary' : 'local-disk',
+        photoPersistent: hasCloudinary || process.env.NODE_ENV === 'development',
+        cloudinary: hasCloudinary ? { cloud_name: cloudName, upload_preset: preset } : null,
     });
 });
 
