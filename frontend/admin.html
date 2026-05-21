@@ -250,8 +250,12 @@ async function uploadPhoto(input, numPlaca) {
       const fd = new FormData();
       fd.append('file', file);
       fd.append('upload_preset', cloud.upload_preset);
-      fd.append('public_id', `bigdooh/${String(numPlaca).replace(/[^0-9A-Za-z_-]/g, '_')}`);
-      fd.append('overwrite', 'true');
+      // public_id único por upload: <num>_<timestamp>. Garante URL nova
+      // a cada troca e evita problema de cache no navegador. Folder
+      // 'bigdooh' já vem do preset, não precisa repetir aqui.
+      // 'overwrite' é proibido em unsigned uploads — não enviar.
+      const safe = String(numPlaca).replace(/[^0-9A-Za-z_-]/g, '_') || 'placa';
+      fd.append('public_id', `${safe}_${Date.now()}`);
       const r = await fetch(`https://api.cloudinary.com/v1_1/${cloud.cloud_name}/image/upload`, { method: 'POST', body: fd });
       if (!r.ok) {
         let msg = 'Falha no upload pra Cloudinary';
