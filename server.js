@@ -133,10 +133,32 @@ const FIELDS = ['NUM_PLACA', 'TIPO', 'ENDERECO', 'SENTIDO', 'LATITUDE', 'LONGITU
 const pick = (body) => FIELDS.reduce((acc, f) => { acc[f] = body[f] != null ? String(body[f]) : ''; return acc; }, {});
 
 app.post('/api/admin/outdoors', requireAdmin, async (req, res) => {
-    const data = pick(req.body || {});
+    const body = req.body || {};
+    const data = pick(body);
     if (!data.NUM_PLACA) return res.status(400).json({ error: 'NUM_PLACA é obrigatório' });
     if (!data.TIPO) return res.status(400).json({ error: 'TIPO é obrigatório' });
+    const rawId = body.id;
+    const editId = (rawId === 0 || rawId) && rawId !== '__new' ? Number(rawId) : null;
     try {
+        if (editId && Number.isFinite(editId)) {
+            // Edição de placa existente identificada pelo id interno —
+            // permite mudar o NUM_PLACA sem criar duplicada.
+            const target = await outdoorDb.execute({ sql: 'SELECT id FROM outdoorsinfo WHERE id = ?', args: [editId] });
+            if (!target.rows[0]) return res.status(404).json({ error: 'Placa não encontrada (id desconhecido)' });
+            const conflict = await outdoorDb.execute({
+                sql: 'SELECT id FROM outdoorsinfo WHERE NUM_PLACA = ? AND id != ?',
+                args: [data.NUM_PLACA, editId],
+            });
+            if (conflict.rows[0]) {
+                return res.status(409).json({ error: `Já existe outra placa com o número ${data.NUM_PLACA}` });
+            }
+            await outdoorDb.execute({
+                sql: `UPDATE outdoorsinfo SET NUM_PLACA=?, TIPO=?, ENDERECO=?, SENTIDO=?, LATITUDE=?, LONGITUDE=?, LINK=?, GABARITO=?, FOTO_URL=? WHERE id=?`,
+                args: [data.NUM_PLACA, data.TIPO, data.ENDERECO, data.SENTIDO, data.LATITUDE, data.LONGITUDE, data.LINK, data.GABARITO, data.FOTO_URL, editId],
+            });
+            return res.json({ ok: true, id: editId, action: 'updated' });
+        }
+        // Sem id → upsert pelo NUM_PLACA (linha nova vinda do botão "+ Nova placa")
         const existing = await outdoorDb.execute({ sql: 'SELECT id FROM outdoorsinfo WHERE NUM_PLACA = ?', args: [data.NUM_PLACA] });
         if (existing.rows[0]) {
             const id = existing.rows[0].id;

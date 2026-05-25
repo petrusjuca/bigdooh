@@ -77,6 +77,7 @@
         <input id="xlsxInput" type="file" accept=".xlsx,.xls" style="display:none" onchange="importXlsx(this)" />
       </label>
       <button class="secondary" onclick="exportXlsx()">Baixar planilha</button>
+      <button class="secondary" onclick="bulkRename()" title="Adicionar prefixo/sufixo nos números (ex: virar 101 em 2101)">Renomear em massa</button>
       <span class="summary" id="summary"></span>
     </div>
     <table>
@@ -222,7 +223,9 @@ function addRow() {
 
 async function saveRow(btn) {
   const tr = btn.closest('tr');
+  const rowId = tr.dataset.id;
   const data = {};
+  if (rowId && rowId !== '__new') data.id = Number(rowId);
   tr.querySelectorAll('[data-f]').forEach((el) => { data[el.dataset.f] = el.value; });
   if (!data.NUM_PLACA.trim()) return toast('Informe o número da placa', 'error');
   try {
@@ -295,6 +298,34 @@ async function importXlsx(input) {
     await load();
   } catch (e) { toast(e.message, 'error'); }
   input.value = '';
+}
+
+async function bulkRename() {
+  const tipos = Array.from(new Set(placas.map((p) => p.TIPO))).sort();
+  const tipo = prompt('Em quais placas aplicar a renomeação?\n\nDigite EXATAMENTE o tipo (' + tipos.join(', ') + ') ou "TODAS" para aplicar em todas.');
+  if (!tipo) return;
+  const norm = tipo.trim().toUpperCase();
+  const target = norm === 'TODAS' ? placas : placas.filter((p) => String(p.TIPO || '').toUpperCase() === norm);
+  if (!target.length) return toast('Nenhuma placa encontrada com esse tipo', 'error');
+  const prefix = prompt(`Prefixo a adicionar no início do número (deixe vazio se só quiser sufixo).\nVai afetar ${target.length} placa(s).`, '2');
+  if (prefix === null) return;
+  const suffix = prompt('Sufixo a adicionar no fim (opcional, deixe vazio se não quiser).', '');
+  if (suffix === null) return;
+  if (!prefix && !suffix) return toast('Nada a aplicar (prefixo e sufixo vazios)', 'error');
+  const sample = target.slice(0, 3).map((p) => `${p.NUM_PLACA} → ${prefix}${p.NUM_PLACA}${suffix}`).join('\n');
+  if (!confirm(`Vai aplicar em ${target.length} placa(s). Exemplo:\n\n${sample}\n\nContinuar?`)) return;
+  let ok = 0, fail = 0;
+  for (const p of target) {
+    try {
+      await api('/api/admin/outdoors', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...p, id: p.id, NUM_PLACA: `${prefix}${p.NUM_PLACA}${suffix}` }),
+      });
+      ok++;
+    } catch (e) { fail++; }
+  }
+  toast(`Renomeadas: ${ok} ok, ${fail} falhas`, fail ? 'error' : 'ok');
+  await load();
 }
 
 async function exportXlsx() {
