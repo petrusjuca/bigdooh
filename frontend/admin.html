@@ -307,13 +307,30 @@ async function bulkRename() {
   const norm = tipo.trim().toUpperCase();
   const target = norm === 'TODAS' ? placas : placas.filter((p) => String(p.TIPO || '').toUpperCase() === norm);
   if (!target.length) return toast('Nenhuma placa encontrada com esse tipo', 'error');
-  const prefix = prompt(`Prefixo a adicionar no início do número (deixe vazio se só quiser sufixo).\nVai afetar ${target.length} placa(s).`, '2');
+  // Sem default pré-preenchido (evita usuário digitar em cima e gerar "22")
+  const prefix = prompt(`Prefixo a adicionar no início do número (ex: "2" para placa 101 virar 2101).\nDeixe vazio se só quiser sufixo.\nVai afetar ${target.length} placa(s).`);
   if (prefix === null) return;
-  const suffix = prompt('Sufixo a adicionar no fim (opcional, deixe vazio se não quiser).', '');
+  const suffix = prompt('Sufixo a adicionar no fim (opcional, deixe vazio se não quiser).');
   if (suffix === null) return;
   if (!prefix && !suffix) return toast('Nada a aplicar (prefixo e sufixo vazios)', 'error');
-  const sample = target.slice(0, 3).map((p) => `${p.NUM_PLACA} → ${prefix}${p.NUM_PLACA}${suffix}`).join('\n');
-  if (!confirm(`Vai aplicar em ${target.length} placa(s). Exemplo:\n\n${sample}\n\nContinuar?`)) return;
+
+  // Detecta se a renomeação já parece ter sido aplicada (idempotência)
+  if (prefix) {
+    const alreadyPrefixed = target.filter((p) => String(p.NUM_PLACA || '').startsWith(prefix)).length;
+    if (alreadyPrefixed > target.length * 0.5) {
+      const pct = Math.round((alreadyPrefixed / target.length) * 100);
+      if (!confirm(`⚠️  Atenção: ${alreadyPrefixed} de ${target.length} placas (${pct}%) já começam com "${prefix}". Talvez essa renomeação já tenha sido feita.\n\nSe aplicar de novo, vai virar "${prefix}${prefix}…" (prefixo duplicado).\n\nTem certeza que quer continuar?`)) return;
+    }
+  }
+
+  const sample = target.slice(0, 5).map((p) => `${p.NUM_PLACA} → ${prefix}${p.NUM_PLACA}${suffix}`).join('\n');
+  const expectedSample = `${prefix}${target[0].NUM_PLACA}${suffix}`;
+  const typed = prompt(`Vai aplicar em ${target.length} placa(s). Prévia dos 5 primeiros:\n\n${sample}\n\nPara confirmar, digite o resultado da primeira (${target[0].NUM_PLACA} → ?):`);
+  if (typed === null) return;
+  if (typed.trim() !== expectedSample) {
+    return toast(`Confirmação não bateu (esperado "${expectedSample}", recebido "${typed.trim()}"). Cancelado.`, 'error');
+  }
+
   let ok = 0, fail = 0;
   for (const p of target) {
     try {
